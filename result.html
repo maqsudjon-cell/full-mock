@@ -6,6 +6,9 @@
 <title>Result — pangea8 Full Mock</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="mock.js"></script>
+<!-- PDF engine: loaded eagerly so the download stays inside the tap gesture (iOS Safari blocks async saves) -->
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js" defer></script>
 <style>
 :root, html[data-p8m-theme="light"]{
   --bg:#FAFAF9; --surface:#fff; --surface2:#F4F4F2; --text:#0a0a0a; --muted:#6b7280;
@@ -132,7 +135,8 @@ td.na{color:var(--muted);font-style:italic}
   </div>
 
   <div class="actions">
-    <a class="btn btn-grad" href="index.html" onclick="P8M.clearAttempt()">Back to Full Mock home</a>
+    <button class="btn btn-grad" id="pdfBtn">⬇ Download PDF report</button>
+    <a class="btn btn-ghost" href="index.html" onclick="P8M.clearAttempt()">Back to Full Mock home</a>
     <a class="btn btn-ghost" href="https://pangea8.com/ielts-hub/">Free practice hub →</a>
   </div>
 </main>
@@ -272,7 +276,7 @@ function persist(){
   };
   try {
     var h = JSON.parse(localStorage.getItem('p8m_history') || '[]');
-    h.push({ name: rec.name, m: rec.m, l: rec.l, r: rec.r, w: rec.w, overall: rec.overall, ts: rec.ts });
+    h.push({ uid: rec.uid, name: rec.name, m: rec.m, l: rec.l, r: rec.r, w: rec.w, overall: rec.overall, ts: rec.ts });
     localStorage.setItem('p8m_history', JSON.stringify(h.slice(-100)));
   } catch(e){}
   P8M.ready.then(function(fb){
@@ -280,6 +284,170 @@ function persist(){
     fb.db.collection('mock_results').add(rec).catch(function(e){ console.warn('save result', e); });
   });
 }
+
+/* ================= branded PDF report ================= */
+function slugName(s){
+  s = String(s || 'candidate').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  return s || 'candidate';
+}
+/* iOS Safari ignores <a download>/doc.save — open a blob URL inside the tap gesture instead */
+function savePDF(doc, filename){
+  var isIOS = /iP(hone|od|ad)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  if (isIOS) { var u = doc.output('bloburl'); var w = window.open(u, '_blank'); if (!w) location.href = u; }
+  else doc.save(filename);
+}
+function drawWordmark(doc, x, y, size){
+  doc.setFont('helvetica', 'bold'); doc.setFontSize(size);
+  doc.setTextColor(17, 24, 39); doc.text('pangea', x, y);
+  var w1 = doc.getTextWidth('pangea');
+  doc.setTextColor(13, 146, 104); doc.text('8', x + w1, y);
+  return w1 + doc.getTextWidth('8');
+}
+function genPDF(){
+  if (!window.jspdf || !window.qrcode) { P8M.toast('PDF engine is still loading — try again in a moment.'); return; }
+  try {
+    var doc = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4' });
+    var PW = 210, M2 = 14, CW = PW - M2 * 2, y = 18;
+
+    /* header */
+    drawWordmark(doc, M2, y, 20);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(107, 114, 128);
+    doc.text('pangea8.com/full-mock', PW - M2, y, { align: 'right' });
+    y += 4.5;
+    doc.setDrawColor(13, 146, 104); doc.setLineWidth(0.8); doc.line(M2, y, PW - M2, y);
+    y += 10;
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(16); doc.setTextColor(17, 24, 39);
+    doc.text('IELTS Full Mock ' + (Number(A.n) || 1) + ' — Result Sheet', M2, y);
+    y += 6;
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor(107, 114, 128);
+    /* jsPDF's built-in helvetica has no '№' glyph — use ASCII in the PDF */
+    var candNoPdf = candNo.replace('№', 'No.');
+    doc.text((A.name || 'Candidate') + '   ·   ' + candNoPdf + '   ·   ' +
+      new Date(A.startedAt).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }), M2, y);
+    y += 8;
+
+    /* result table */
+    function box(x, yy, w, h, fill){
+      if (fill) { doc.setFillColor(fill[0], fill[1], fill[2]); doc.rect(x, yy, w, h, 'F'); }
+      doc.setDrawColor(229, 231, 235); doc.setLineWidth(0.25); doc.rect(x, yy, w, h);
+    }
+    function hcell(x, yy, w, h, fill, txt, dark, fs){
+      box(x, yy, w, h, fill);
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(fs || 9);
+      if (dark) doc.setTextColor(31, 41, 55); else doc.setTextColor(255, 255, 255);
+      doc.text(txt, x + w / 2, yy + h / 2 + 1.3, { align: 'center' });
+    }
+    var cols = [44, 23, 23, 15, 15, 17, 21, 24];
+    var xs = [M2]; for (var i = 0; i < cols.length; i++) xs.push(xs[i] + cols[i]);
+    var EM = [13, 146, 104], EMD = [6, 78, 59], BLU = [37, 99, 235], AMB = [217, 119, 6],
+        AMBS = [246, 194, 107], GRY = [156, 163, 175], SUR = [244, 244, 242];
+    hcell(xs[0], y, cols[0], 16, SUR, 'CANDIDATE', true, 10);
+    hcell(xs[1], y, cols[1], 16, EM, 'LISTENING');
+    hcell(xs[2], y, cols[2], 16, BLU, 'READING');
+    hcell(xs[3], y, cols[3] + cols[4] + cols[5], 8, AMB, 'WRITING');
+    hcell(xs[3], y + 8, cols[3], 8, AMBS, 'Task 1', true, 8);
+    hcell(xs[4], y + 8, cols[4], 8, AMBS, 'Task 2', true, 8);
+    hcell(xs[5], y + 8, cols[5], 8, AMBS, 'Overall', true, 8);
+    hcell(xs[6], y, cols[6], 16, GRY, 'SPEAKING');
+    hcell(xs[7], y, cols[7], 16, EMD, 'OVERALL', false, 10);
+    y += 16;
+    var rh = 15;
+    for (var c = 0; c < cols.length; c++) box(xs[c], y, cols[c], rh, null);
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(9.5); doc.setTextColor(17, 24, 39);
+    doc.text(String(A.name || 'Candidate').slice(0, 26), xs[0] + cols[0] / 2, y + 6.2, { align: 'center' });
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(7.5); doc.setTextColor(107, 114, 128);
+    doc.text(candNoPdf, xs[0] + cols[0] / 2, y + 11, { align: 'center' });
+    function val(ci, txt, fs, color, bold, italic){
+      doc.setFont('helvetica', (bold ? 'bold' : (italic ? 'italic' : 'normal')));
+      doc.setFontSize(fs);
+      var col = color || [17, 24, 39];
+      doc.setTextColor(col[0], col[1], col[2]);
+      doc.text(String(txt), xs[ci] + cols[ci] / 2, y + rh / 2 + 1.5, { align: 'center' });
+    }
+    val(1, fmtCell(bandL, L && L.raw), 10, null, true);
+    val(2, fmtCell(bandR, R && R.raw), 10, null, true);
+    val(3, state.w1 == null ? 'N/A' : P8M.fmtBand(state.w1), 9.5);
+    val(4, state.w2 == null ? 'N/A' : P8M.fmtBand(state.w2), 9.5);
+    val(5, state.w == null ? 'N/A' : P8M.fmtBand(state.w), 9.5, null, true);
+    val(6, 'N/A', 9.5, [130, 130, 130], false, true);
+    val(7, P8M.fmtBand(state.overall), 13, EM, true);
+    y += rh + 5;
+
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(7.8); doc.setTextColor(107, 114, 128);
+    var note = 'Listening & Reading show band (raw score /40). Writing bands are estimated by the pangea8 AI examiner using the official IELTS descriptors. Speaking is not part of the online mock — the overall band is the average of the three completed skills, rounded to the nearest 0.5. This is a practice result, not an official IELTS score.';
+    var noteLines = doc.splitTextToSize(note, CW);
+    doc.text(noteLines, M2, y);
+    y += noteLines.length * 3.4 + 6;
+
+    /* details line */
+    doc.setFontSize(9); doc.setTextColor(55, 65, 81);
+    var det = 'Listening raw: ' + (L ? L.raw + ' / ' + L.total : '—') +
+              '     Reading raw: ' + (R ? R.raw + ' / ' + R.total : '—') +
+              '     Writing: Task 1 ' + (W ? W.w1 : 0) + ' words · Task 2 ' + (W ? W.w2 : 0) + ' words';
+    doc.text(det, M2, y);
+    y += 9;
+
+    /* AI feedback */
+    function ensureSpace(need){
+      if (y + need > 268) { doc.addPage(); y = 20; }
+    }
+    if (state.fb1 || state.fb2) {
+      ensureSpace(20);
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(12.5); doc.setTextColor(17, 24, 39);
+      doc.text('AI Examiner Feedback — Writing', M2, y);
+      y += 7;
+      [[1, state.w1, state.fb1], [2, state.w2, state.fb2]].forEach(function(t){
+        var lines = doc.splitTextToSize(String(t[2] || '—').slice(0, 1400), CW - 6);
+        ensureSpace(12 + lines.length * 4.1);
+        doc.setFillColor(217, 119, 6); doc.rect(M2, y - 3.5, 1.4, 8 + lines.length * 4.1, 'F');
+        doc.setFont('helvetica', 'bold'); doc.setFontSize(10); doc.setTextColor(217, 119, 6);
+        doc.text('TASK ' + t[0] + (t[1] == null ? '' : '  —  Band ' + P8M.fmtBand(t[1])), M2 + 5, y);
+        y += 5.5;
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(9.3); doc.setTextColor(55, 65, 81);
+        doc.text(lines, M2 + 5, y);
+        y += lines.length * 4.1 + 7;
+      });
+    }
+
+    /* closer card with QR */
+    ensureSpace(42);
+    doc.setFillColor(6, 78, 59);
+    doc.roundedRect(M2, y, CW, 36, 3, 3, 'F');
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(13); doc.setTextColor(255, 255, 255);
+    doc.text('Keep practising — 100+ free IELTS tests', M2 + 8, y + 13);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5); doc.setTextColor(209, 250, 229);
+    doc.text('pangea8.com/ielts-hub   ·   Telegram @pangea8', M2 + 8, y + 20.5);
+    doc.setFontSize(8); doc.setTextColor(163, 230, 200);
+    doc.text('Scan the code to open the free practice hub', M2 + 8, y + 28);
+    try {
+      var qr = window.qrcode(0, 'M');
+      qr.addData('https://pangea8.com/ielts-hub/');
+      qr.make();
+      var qn = qr.getModuleCount(), qsize = 28, qx = M2 + CW - qsize - 5, qy = y + 4;
+      doc.setFillColor(255, 255, 255); doc.roundedRect(qx, qy, qsize, qsize, 1.5, 1.5, 'F');
+      var cellSz = (qsize - 4) / qn;
+      doc.setFillColor(6, 78, 59);
+      for (var r2 = 0; r2 < qn; r2++) for (var c2 = 0; c2 < qn; c2++)
+        if (qr.isDark(r2, c2)) doc.rect(qx + 2 + c2 * cellSz, qy + 2 + r2 * cellSz, cellSz, cellSz, 'F');
+    } catch (e) { /* QR fails soft — PDF still exports */ }
+
+    /* footer on every page */
+    var pages = doc.getNumberOfPages();
+    for (var p = 1; p <= pages; p++) {
+      doc.setPage(p);
+      doc.setDrawColor(229, 231, 235); doc.setLineWidth(0.3); doc.line(M2, 284, PW - M2, 284);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(7.5); doc.setTextColor(156, 163, 175);
+      doc.text('pangea8 — IELTS Full Mock  ·  pangea8.com/full-mock', M2, 289);
+      doc.text('Page ' + p + ' / ' + pages, PW - M2, 289, { align: 'right' });
+    }
+
+    savePDF(doc, 'pangea8-full-mock-' + (Number(A.n) || 1) + '-' + slugName(A.name) + '.pdf');
+  } catch (err) {
+    console.warn('pdf', err);
+    P8M.toast('Could not build the PDF — try again.');
+  }
+}
+$('pdfBtn').addEventListener('click', genPDF);
 
 renderOverall();
 gradeWriting();

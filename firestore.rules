@@ -51,9 +51,10 @@ service cloud.firestore {
       allow update, delete: if isAdmin();
     }
 
-    /* ===== Full Mock: results ===== */
+    /* ===== Full Mock: results =====
+       Students can only read their OWN results; the admin sees all. */
     match /mock_results/{id} {
-      allow read: if true;
+      allow read: if isAdmin() || (request.auth != null && resource.data.uid == request.auth.uid);
       allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
       allow update, delete: if isAdmin();
     }

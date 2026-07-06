@@ -160,7 +160,7 @@ html[data-p8m-theme="light"] .req-ok{color:#065f46}
       <div class="balance"><span id="coinIco2"></span><span id="coinBig">—</span><small>coins</small></div>
       <button class="btn btn-grad" id="buyBtn" style="margin-bottom:10px">Buy coins</button>
       <p style="font-size:.83rem;color:var(--muted)">1 full mock = <b id="costInline"></b> coins. Coins are added after your card-transfer receipt is confirmed (usually within a few hours).</p>
-      <p id="uidLine" style="display:none;font-size:.75rem;color:var(--muted);margin-top:8px">Your ID: <code id="uidCode" style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:1px 6px;cursor:pointer;word-break:break-all" title="Tap to copy"></code></p>
+      <p id="uidLine" style="display:none;font-size:.78rem;color:var(--muted);margin-top:10px;border-top:1px dashed var(--border);padding-top:10px"><b>Student ID</b> (share it to receive gift coins):<br><code id="uidCode" style="display:inline-block;margin-top:4px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:2px 8px;cursor:pointer;word-break:break-all" title="Tap to copy">…</code></p>
       <div class="req-ok" id="reqOk"></div>
     </div>
   </div>
@@ -274,7 +274,9 @@ function renderAuth(){
   } else {
     $('startHint').innerHTML = 'Sign in first: Google popup, or <a href="https://pangea8.com/signin.html?next=/full-mock/">sign in with email</a>.';
     $('coinBig').textContent = '—'; $('coinCount').textContent = '—';
+    $('uidLine').style.display = 'none';
   }
+  renderHist();
 }
 function refreshWallet(){
   P8M.getWallet(fbCtx).then(function(w){
@@ -339,7 +341,7 @@ var chosenMock = C.mocks[0];
     card.className = 'mock-card';
     card.innerHTML = '<h4>' + P8M.esc(m.title) + '</h4>' +
       '<span class="mprice">' + P8M.COIN_SVG + C.mockCost + ' coins</span>' +
-      (done[m.n] ? '<span class="done">✓ taken</span>' : '') +
+      '<span class="done" data-done="' + m.n + '" style="display:none">✓ taken</span>' +
       '<button class="btn btn-grad" data-n="' + m.n + '">Start</button>';
     card.querySelector('button').addEventListener('click', function(){ startMock(m); });
     grid.appendChild(card);
@@ -375,13 +377,20 @@ $('confirmStart').addEventListener('click', function(){
   });
 });
 
-/* history */
-(function renderHist(){
-  var h = [];
-  try { h = JSON.parse(localStorage.getItem('p8m_history') || '[]'); } catch(e){}
-  if (!h.length) return;
-  var box = $('histList'); box.innerHTML = '';
-  h.slice().reverse().slice(0, 12).forEach(function(r){
+/* history — ONLY the signed-in student's own results (local entries are
+   filtered by uid; older entries without a uid are kept for back-compat).
+   When Firestore is reachable, the student's results are also pulled from
+   mock_results so they follow the account across devices. */
+function paintHist(list){
+  var box = $('histList');
+  document.querySelectorAll('[data-done]').forEach(function(el){ el.style.display = 'none'; });
+  if (!list.length) {
+    box.innerHTML = '<p class="hist-empty">No mocks taken yet — your results will appear here.</p>';
+    return;
+  }
+  box.innerHTML = '';
+  list.sort(function(a, b){ return (b.ts || 0) - (a.ts || 0); });
+  list.slice(0, 12).forEach(function(r){
     var d = document.createElement('div'); d.className = 'hist-row';
     var date = new Date(r.ts).toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
     d.innerHTML = '<span>' + P8M.esc(r.name || '') + ' · Mock ' + (r.m || 1) + ' · ' + date + '</span>' +
@@ -389,7 +398,30 @@ $('confirmStart').addEventListener('click', function(){
       ' <span>W</span>' + P8M.fmtBand(r.w) + ' <span>S</span>N/A <span style="color:var(--em)">Overall</span><b style="color:var(--em)">' + P8M.fmtBand(r.overall) + '</b></span>';
     box.appendChild(d);
   });
-})();
+  list.forEach(function(r){
+    var el = document.querySelector('[data-done="' + (r.m || 1) + '"]');
+    if (el) el.style.display = '';
+  });
+}
+function renderHist(){
+  var uid = fbCtx && fbCtx.user ? fbCtx.user.uid : null;
+  var local = [];
+  try { local = JSON.parse(localStorage.getItem('p8m_history') || '[]'); } catch(e){}
+  if (!uid) { paintHist([]); return; }
+  var mine = local.filter(function(r){ return r.uid === uid || !r.uid; });
+  paintHist(mine.slice());
+  if (P8M.DEV || !fbCtx.db) return;
+  fbCtx.db.collection('mock_results').where('uid', '==', uid).limit(60).get().then(function(qs){
+    var merged = {}, out = [];
+    qs.forEach(function(doc){
+      var d = doc.data();
+      merged[Math.round((d.ts || 0) / 5000)] = 1;
+      out.push({ name: d.name, m: d.m, l: d.l, r: d.r, w: d.w, overall: d.overall, ts: d.ts });
+    });
+    mine.forEach(function(r){ if (!merged[Math.round((r.ts || 0) / 5000)]) out.push(r); });
+    paintHist(out);
+  }).catch(function(e){ console.warn('hist fetch', e); });
+}
 
 /* boot */
 P8M.ready.then(function(fb){
