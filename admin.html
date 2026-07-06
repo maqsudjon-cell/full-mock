@@ -178,7 +178,7 @@ function loadResults(){
     qs.forEach(function(doc){
       var d = doc.data();
       var f = P8M.fmtBand;
-      html += '<tr><td>' + P8M.esc(d.name || '') + '</td><td>' + f(d.l) + ' (' + (d.lraw == null ? '–' : d.lraw) + ')</td><td>' +
+      html += '<tr><td>' + P8M.esc(d.name || '') + (d.m ? ' <small style="color:var(--muted)">M' + d.m + '</small>' : '') + '<br><code style="font-size:.68rem">' + P8M.esc(d.uid || '') + '</code></td><td>' + f(d.l) + ' (' + (d.lraw == null ? '–' : d.lraw) + ')</td><td>' +
         f(d.r) + ' (' + (d.rraw == null ? '–' : d.rraw) + ')</td><td>' + f(d.w1) + '</td><td>' + f(d.w2) + '</td><td>' + f(d.w) +
         '</td><td>N/A</td><td><b>' + f(d.overall) + '</b></td><td>' + new Date(d.ts || 0).toLocaleDateString('en-GB') + '</td></tr>';
     });

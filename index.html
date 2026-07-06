@@ -160,6 +160,7 @@ html[data-p8m-theme="light"] .req-ok{color:#065f46}
       <div class="balance"><span id="coinIco2"></span><span id="coinBig">—</span><small>coins</small></div>
       <button class="btn btn-grad" id="buyBtn" style="margin-bottom:10px">Buy coins</button>
       <p style="font-size:.83rem;color:var(--muted)">1 full mock = <b id="costInline"></b> coins. Coins are added after your card-transfer receipt is confirmed (usually within a few hours).</p>
+      <p id="uidLine" style="display:none;font-size:.75rem;color:var(--muted);margin-top:8px">Your ID: <code id="uidCode" style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:1px 6px;cursor:pointer;word-break:break-all" title="Tap to copy"></code></p>
       <div class="req-ok" id="reqOk"></div>
     </div>
   </div>
@@ -266,6 +267,9 @@ function renderAuth(){
     if (u.photoURL) $('avatarBtn').innerHTML = '<img src="' + P8M.esc(u.photoURL) + '" alt="">';
     else $('avatarBtn').textContent = (u.displayName || u.email || '?').trim()[0].toUpperCase();
     $('startHint').textContent = '';
+    $('uidLine').style.display = '';
+    $('uidCode').textContent = u.uid;
+    $('uidCode').onclick = function(){ navigator.clipboard.writeText(u.uid).then(function(){ P8M.toast('ID copied'); }); };
     refreshWallet();
   } else {
     $('startHint').innerHTML = 'Sign in first: Google popup, or <a href="https://pangea8.com/signin.html?next=/full-mock/">sign in with email</a>.';
