@@ -41,6 +41,8 @@ Until this is done the site shows a "coin system is being configured" notice.
 ## Changing prices / content
 
 - Prices & packages: `mock.js` → `CONFIG.packages`, `CONFIG.mockCost`.
+  Current pricing (2026-07-06): 10 coins = 10 000 UZS (1 mock), 30 = 27 000, 50 = 40 000 —
+  intentionally ~3× cheaper than competitors (mock.ieltszone.uz charges 30 000 UZS per online mock).
 - Different listening test: `CONFIG.mock.listeningAudioBase` + replace the question HTML/answers in `listening.html` (they come from `test14`).
 - Different reading test: swap the AUTHORING AREA block in `reading.html` (same engine as `cdi-reading-*`).
 - Writing topics: `TASKS` object at the top of the `<script>` in `writing.html`.

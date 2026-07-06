@@ -14,10 +14,12 @@
   var CONFIG = {
     adminEmail: 'polatovmaqsudjon1@gmail.com',
     mockCost: 10, // coins per full mock
+    /* Deliberately the cheapest full mock around: competitors charge
+       ~30 000 UZS per online mock — here 1 mock = 10 000 UZS, less in bulk. */
     packages: [
-      { coins: 10, uzs: 30000 },
-      { coins: 30, uzs: 85000 },
-      { coins: 50, uzs: 135000 }
+      { coins: 10, uzs: 10000 },
+      { coins: 30, uzs: 27000 },
+      { coins: 50, uzs: 40000 }
     ],
     card: { number: '5477 3300 2441 7911', holder: 'POLATOV MAKSUDJON' },
     telegramContact: 'https://t.me/mrbmp13',
