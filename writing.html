@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>pangea8 Full Mock — Writing (Part 3 of 3)</title>
+<script src="mock.js"></script>
+<style>
+:root{--navy:#047857;--navy-dark:#035a44;--accent:#047857;--accent-soft:#d1fae5;--bg:#fff;--surface:#fff;--surface-alt:#fafaf9;--text:#0a0a0a;--muted:#6b7280;--border:#e5e7eb;--border-light:#f1f3f5;--bad:#b42318;--warn:#f59e0b;--topbar-h:58px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html,body{height:100%}
+body{font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.5;color:var(--text);background:var(--bg)}
+button{font-family:inherit;cursor:pointer}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:2px;padding:10px 18px;font-size:14px;font-weight:700;transition:.12s}
+.btn:hover{background:var(--surface-alt)}
+.btn.primary{background:var(--navy);color:#fff;border-color:var(--navy)}.btn.primary:hover{background:var(--navy-dark)}
+.screen{display:none}.screen.active{display:block}
+#screen-test.active{height:100vh;display:flex;flex-direction:column;overflow:hidden}
+.center{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px;background:linear-gradient(180deg,#f7f9fc,#e9edf4)}
+.card{width:100%;max-width:880px;background:var(--surface);border:1px solid var(--border);border-radius:2px;box-shadow:0 12px 24px rgba(17,24,39,.1);padding:34px}
+.brand-row{display:inline-flex;align-items:center;gap:9px;color:var(--navy);font-weight:800;margin-bottom:14px}
+.tg-dot{width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:900;font-size:13px}
+.landing-title{font-size:34px;color:var(--navy);margin-bottom:10px;letter-spacing:-.5px}
+.landing-desc{color:var(--muted);font-size:17px;max-width:760px;margin-bottom:22px}
+.rules{margin:16px 0 26px;padding-left:20px}.rules li{margin:9px 0}
+.action-row{display:flex;gap:12px;justify-content:flex-end;flex-wrap:wrap}
+.topbar{height:var(--topbar-h);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:var(--surface);border-bottom:1px solid var(--border-light);z-index:40}
+.tb-left{display:flex;align-items:center;gap:11px}
+.tb-logo{font-size:21px;font-weight:900;color:var(--navy);letter-spacing:.5px}
+.tb-id{font-size:14px;font-weight:700;color:var(--muted)}
+.tb-right{display:flex;align-items:center;gap:10px}
+.timer{font-size:16px;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:.5px;padding:6px 12px;border-radius:20px;background:var(--surface-alt);border:1px solid var(--border);color:var(--text)}
+.timer.warn{color:#fff;background:var(--warn);border-color:var(--warn)}
+.timer.danger{color:#fff;background:var(--bad);border-color:var(--bad);animation:flash 1s infinite}
+@keyframes flash{50%{opacity:.45}}
+.task-tabs{display:flex;gap:6px}
+.task-tab{border:1.5px solid var(--border);background:var(--surface);color:var(--muted);border-radius:2px;padding:7px 16px;font-size:13px;font-weight:800}
+.task-tab.active{border-color:var(--navy);background:var(--navy);color:#fff}
+.task-tab .wc{font-weight:600;opacity:.8;font-size:11px;margin-left:6px}
+.tmain{flex:1;display:flex;overflow:hidden;min-height:0}
+.prompt-pane{flex:1;overflow-y:auto;padding:24px 26px;background:var(--surface);border-right:1px solid var(--border);min-width:280px}
+.write-pane{flex:1.15;display:flex;flex-direction:column;overflow:hidden;background:var(--surface-alt);min-width:280px}
+.prompt-pane h2{font-size:15px;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.tasknote{font-size:13.5px;color:var(--muted);margin-bottom:14px}
+.taskbox{border:1.5px solid var(--text);padding:16px 18px;font-style:italic;font-weight:600;margin-bottom:16px;line-height:1.65;background:var(--surface)}
+.minwords{font-size:13.5px;color:var(--muted);margin-bottom:16px}
+table.data{width:100%;border-collapse:collapse;margin:8px 0 18px;font-size:14px}
+table.data caption{font-weight:800;padding:8px;border:1px solid var(--text);border-bottom:none;font-size:14.5px}
+table.data th,table.data td{border:1px solid var(--text);padding:8px 10px;text-align:center}
+table.data th:first-child,table.data td:first-child{text-align:left;font-weight:700}
+table.data thead th{background:var(--surface-alt)}
+.write-head{padding:10px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--surface);flex-wrap:wrap;gap:6px}
+.write-head .lbl{font-size:13px;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:.5px}
+.wordcount{font-size:13px;font-weight:700;color:var(--muted)}
+.wordcount b{color:var(--navy);font-size:15px}
+.wordcount.low b{color:var(--bad)}
+textarea.essay{flex:1;resize:none;border:none;outline:none;background:transparent;padding:20px 22px;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.8;color:var(--text)}
+.footerbar{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;background:var(--surface);border-top:1px solid var(--border);padding:9px 16px;gap:10px;z-index:40}
+.foot-hint{font-size:12.5px;color:var(--muted)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:100;padding:16px}
+.modal.show{display:flex}
+.modal-card{background:var(--surface);border-radius:2px;padding:28px 30px;max-width:460px;width:100%;box-shadow:0 12px 40px rgba(0,0,0,.3);text-align:center}
+.modal-card h2{color:var(--navy);margin-bottom:10px}.modal-card p{color:var(--muted);margin-bottom:22px}
+.modal-actions{display:flex;gap:10px;justify-content:center}
+@media(max-width:900px){
+  .tmain{flex-direction:column}
+  .prompt-pane{flex:none;max-height:44%;border-right:none;border-bottom:1px solid var(--border)}
+  .write-pane{flex:1}
+  .landing-title{font-size:26px}
+}
+</style>
+</head>
+<body>
+<div id="screen-landing" class="screen active"><div class="center"><div class="card">
+  <div class="brand-row"><span class="tg-dot">&#9654;</span> pangea8 Full Mock</div>
+  <h1 class="landing-title">Writing — Part 3 of 3</h1>
+  <p class="landing-desc">Two tasks, 60 minutes. Task 1: report (150+ words, ~20 min). Task 2: essay (250+ words, ~40 min). Task 2 counts double towards your Writing band.</p>
+  <ul class="rules">
+    <li>The timer starts when you click <strong>Begin Writing</strong> and cannot be paused.</li>
+    <li>Switch between tasks at any time with the tabs at the top.</li>
+    <li>Spell-check is <strong>disabled</strong>, as in the real exam.</li>
+    <li>Your answers auto-submit at 0:00 and go straight to the AI examiner.</li>
+  </ul>
+  <div class="action-row"><button class="btn primary" onclick="beginWriting()">Begin Writing</button></div>
+</div></div></div>
+
+<div id="screen-test" class="screen">
+  <header class="topbar">
+    <div class="tb-left"><span class="tb-logo">pangea8</span><span class="tb-id">Writing · Part 3 / 3</span></div>
+    <div class="task-tabs">
+      <button class="task-tab active" id="tab1" onclick="switchTask(1)">Task 1<span class="wc" id="tabWc1">0 w</span></button>
+      <button class="task-tab" id="tab2" onclick="switchTask(2)">Task 2<span class="wc" id="tabWc2">0 w</span></button>
+    </div>
+    <div class="tb-right"><span class="timer" id="timer">60:00</span></div>
+  </header>
+  <div class="tmain">
+    <div class="prompt-pane" id="promptPane"></div>
+    <div class="write-pane">
+      <div class="write-head">
+        <span class="lbl" id="writeLbl">Task 1 response</span>
+        <span class="wordcount" id="wcBox">Words: <b id="wcNum">0</b> <span id="wcMin">/ 150 min</span></span>
+      </div>
+      <textarea class="essay" id="essayBox" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Type your answer here…"></textarea>
+    </div>
+  </div>
+  <footer class="footerbar">
+    <span class="foot-hint">Drafts save automatically. Task 2 carries twice the weight of Task 1.</span>
+    <button class="btn primary" onclick="showSubModal()">Finish Writing ✓</button>
+  </footer>
+</div>
+
+<div class="modal" id="modal"><div class="modal-card">
+  <h2>Submit your writing?</h2><p id="modal-p"></p>
+  <div class="modal-actions"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="finishWriting()">Submit — see my result</button></div>
+</div></div>
+
+<script>
+'use strict';
+var MOCK_ATTEMPT = window.P8M ? P8M.requireStage('writing') : null;
+var WSTATE_KEY = 'p8m_writing_state';
+var DURATION = 60 * 60 * 1000;
+
+var TASKS = {
+  1: {
+    min: 150,
+    html: '<h2>Writing Task 1</h2>' +
+      '<p class="tasknote">You should spend about <b>20 minutes</b> on this task.</p>' +
+      '<div class="taskbox">The table below shows the number of cars per 1000 people in five European countries in three years and compares them with the European average.<br><br>Summarise the information by selecting and reporting the main features, and make comparisons where relevant.</div>' +
+      '<p class="minwords">Write at least <b>150 words</b>.</p>' +
+      '<table class="data"><caption>The number of cars per 1000 people</caption>' +
+      '<thead><tr><th>Country</th><th>2009</th><th>2010</th><th>2011</th></tr></thead><tbody>' +
+      '<tr><td>Country 1</td><td>400</td><td>450</td><td>350</td></tr>' +
+      '<tr><td>Country 2</td><td>550</td><td>600</td><td>570</td></tr>' +
+      '<tr><td>Country 3</td><td>600</td><td>650</td><td>620</td></tr>' +
+      '<tr><td>Country 4</td><td>700</td><td>700</td><td>700</td></tr>' +
+      '<tr><td>Country 5</td><td>870</td><td>920</td><td>990</td></tr>' +
+      '<tr><td>Average of 5</td><td>680</td><td>740</td><td>730</td></tr>' +
+      '</tbody></table>',
+    prompt: 'The table shows the number of cars per 1000 people in five European countries in 2009, 2010 and 2011, compared with the European average. Data — Country 1: 400/450/350; Country 2: 550/600/570; Country 3: 600/650/620; Country 4: 700/700/700; Country 5: 870/920/990; Average of 5: 680/740/730. Summarise the information by selecting and reporting the main features, and make comparisons where relevant.'
+  },
+  2: {
+    min: 250,
+    html: '<h2>Writing Task 2</h2>' +
+      '<p class="tasknote">You should spend about <b>40 minutes</b> on this task.</p>' +
+      '<div class="taskbox">Some people enjoy change in life, while other people try to avoid it.<br><br>What are the advantages and disadvantages of both approaches?</div>' +
+      '<p class="minwords">Write at least <b>250 words</b>. Give reasons for your answer and include any relevant examples from your own knowledge or experience.</p>',
+    prompt: 'Some people enjoy change in life, while other people try to avoid it. What are the advantages and disadvantages of both approaches?'
+  }
+};
+
+var S = { task: 1, texts: { 1: '', 2: '' }, deadline: null, timerInt: null, finished: false };
+var $ = function(id){ return document.getElementById(id); };
+
+function words(t){ var m = String(t||'').trim().match(/\S+/g); return m ? m.length : 0; }
+function save(){
+  if (S.finished) return;
+  try { sessionStorage.setItem(WSTATE_KEY, JSON.stringify({ texts: S.texts, deadline: S.deadline, started: !!S.deadline })); } catch(e){}
+}
+function showScreen(id){ document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); }); $(id).classList.add('active'); }
+
+function beginWriting(resumeDeadline){
+  showScreen('screen-test');
+  S.deadline = resumeDeadline || (Date.now() + DURATION);
+  switchTask(S.task);
+  startTimer();
+  save();
+  window.addEventListener('beforeunload', warnL);
+}
+function warnL(e){ e.preventDefault(); e.returnValue = ''; }
+
+function switchTask(n){
+  /* stash current text first (not on the very first render — it would wipe a restored draft) */
+  if (S.uiReady) S.texts[S.task] = $('essayBox').value;
+  S.uiReady = true;
+  S.task = n;
+  $('tab1').classList.toggle('active', n === 1);
+  $('tab2').classList.toggle('active', n === 2);
+  $('promptPane').innerHTML = TASKS[n].html;
+  $('writeLbl').textContent = 'Task ' + n + ' response';
+  $('wcMin').textContent = '/ ' + TASKS[n].min + ' min';
+  $('essayBox').value = S.texts[n] || '';
+  updateCount();
+  $('essayBox').focus();
+}
+function updateCount(){
+  S.texts[S.task] = $('essayBox').value;
+  var w = words(S.texts[S.task]);
+  $('wcNum').textContent = w;
+  $('wcBox').classList.toggle('low', w < TASKS[S.task].min);
+  $('tabWc1').textContent = words(S.texts[1]) + ' w';
+  $('tabWc2').textContent = words(S.texts[2]) + ' w';
+  save();
+}
+document.addEventListener('DOMContentLoaded', function(){
+  $('essayBox').addEventListener('input', updateCount);
+});
+
+function startTimer(){
+  clearInterval(S.timerInt);
+  S.timerInt = setInterval(tick, 1000);
+  tick();
+}
+function tick(){
+  if (S.finished || !S.deadline) return;
+  var secs = Math.max(0, Math.ceil((S.deadline - Date.now()) / 1000));
+  var el = $('timer');
+  el.textContent = String(Math.floor(secs/60)).padStart(2,'0') + ':' + String(secs%60).padStart(2,'0');
+  el.className = 'timer';
+  if (secs <= 300) el.classList.add('danger'); else if (secs <= 600) el.classList.add('warn');
+  if (secs <= 0) { clearInterval(S.timerInt); finishWriting(); }
+}
+document.addEventListener('visibilitychange', tick);
+window.addEventListener('focus', tick);
+
+function showSubModal(){
+  S.texts[S.task] = $('essayBox').value;
+  var w1 = words(S.texts[1]), w2 = words(S.texts[2]);
+  var warn = [];
+  if (w1 < TASKS[1].min) warn.push('Task 1 is under 150 words (' + w1 + ')');
+  if (w2 < TASKS[2].min) warn.push('Task 2 is under 250 words (' + w2 + ')');
+  $('modal-p').textContent = (warn.length ? '⚠ ' + warn.join('; ') + '. Short answers lose marks. ' : 'Both tasks meet the minimum length. ') +
+    'After submitting, the AI examiner marks your writing and your full result sheet opens.';
+  $('modal').classList.add('show');
+}
+function closeModal(){ $('modal').classList.remove('show'); }
+
+function finishWriting(){
+  if (S.finished) return;
+  S.finished = true;
+  closeModal();
+  clearInterval(S.timerInt);
+  window.removeEventListener('beforeunload', warnL);
+  if (S.uiReady) S.texts[S.task] = $('essayBox').value;
+  sessionStorage.setItem('p8m_writing', JSON.stringify({
+    t1: S.texts[1] || '', t2: S.texts[2] || '',
+    w1: words(S.texts[1]), w2: words(S.texts[2]),
+    q1: TASKS[1].prompt, q2: TASKS[2].prompt,
+    ts: Date.now()
+  }));
+  sessionStorage.removeItem(WSTATE_KEY);
+  P8M.advanceStage('result');
+  var ov = document.createElement('div');
+  ov.style.cssText = 'position:fixed;inset:0;background:rgba(10,10,10,.92);z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#fff;font-family:Arial,sans-serif;text-align:center;padding:20px';
+  ov.innerHTML = '<div style="font-size:2.6rem">✓</div><div style="font-size:1.3rem;font-weight:700">Writing complete</div><div style="opacity:.75">Preparing your result sheet…</div>';
+  document.body.appendChild(ov);
+  setTimeout(function(){ location.replace('result.html'); }, 1800);
+}
+
+/* resume after reload */
+(function initMock(){
+  if (!MOCK_ATTEMPT) return; /* redirecting */
+  var st = null;
+  try { st = JSON.parse(sessionStorage.getItem(WSTATE_KEY) || 'null'); } catch(e){}
+  if (st && st.started && st.deadline) {
+    S.texts = st.texts || { 1: '', 2: '' };
+    if (Date.now() >= st.deadline) { S.deadline = st.deadline; finishWriting(); }
+    else beginWriting(st.deadline);
+  }
+})();
+</script>
+</body>
+</html>

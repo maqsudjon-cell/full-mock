@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Result — pangea8 Full Mock</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="mock.js"></script>
+<style>
+:root, html[data-p8m-theme="light"]{
+  --bg:#FAFAF9; --surface:#fff; --surface2:#F4F4F2; --text:#0a0a0a; --muted:#6b7280;
+  --border:#e5e7eb; --em:#0D9268; --em-bright:#0A8A60; --em-soft:#d1fae5;
+  --shadow:0 4px 18px rgba(10,10,10,.07); --r:18px;
+  --col-l:#0D9268; --col-r:#2563eb; --col-w:#d97706; --col-w-soft:#f6c26b; --col-s:#9ca3af; --col-o:#064e3b;
+}
+html[data-p8m-theme="dark"]{
+  --bg:#0A0A0A; --surface:#111; --surface2:#171717; --text:#fafafa; --muted:#a1a1aa;
+  --border:#232323; --em:#10B981; --em-bright:#34D399; --em-soft:#064e3b;
+  --shadow:0 4px 20px rgba(0,0,0,.5);
+  --col-l:#10B981; --col-r:#3b82f6; --col-w:#f59e0b; --col-w-soft:#b45309; --col-s:#4b5563; --col-o:#10B981;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+h1,h2,h3{font-family:'Space Grotesk',Inter,sans-serif;letter-spacing:-.02em}
+.wrap{max-width:980px;margin:0 auto;padding:0 18px}
+header.site{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.hrow{display:flex;align-items:center;justify-content:space-between;height:62px}
+.wordmark{font-family:'Space Grotesk';font-weight:700;font-size:1.25rem;text-decoration:none;color:var(--text)}
+.wordmark b{color:var(--em)}
+.wordmark small{font-weight:600;color:var(--muted);font-size:.72em;margin-left:8px}
+main{padding:36px 0 90px}
+.congrats{text-align:center;margin-bottom:26px}
+.congrats h1{font-size:clamp(1.5rem,4vw,2.2rem)}
+.congrats p{color:var(--muted)}
+.sheet{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);padding:22px;overflow-x:auto;margin-bottom:26px}
+table.report{border-collapse:collapse;width:100%;min-width:680px;font-size:.92rem}
+table.report th, table.report td{border:1px solid var(--border);padding:9px 12px;text-align:center;white-space:nowrap}
+.brandrow td{border:none;padding:4px 0 12px;text-align:left}
+.brandrow .bd{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.brandrow .bm{font-family:'Space Grotesk';font-weight:700;font-size:1.15rem}
+.brandrow .bm b{color:var(--em)}
+.brandrow .dt{color:var(--muted);font-size:.82rem;font-weight:600}
+th.h-cand{background:var(--surface2);color:var(--text)}
+th.h-l{background:var(--col-l);color:#fff}
+th.h-r{background:var(--col-r);color:#fff}
+th.h-w{background:var(--col-w);color:#fff}
+th.h-wsub{background:var(--col-w-soft);color:#1f2937;font-weight:700}
+html[data-p8m-theme="dark"] th.h-wsub{color:#fff}
+th.h-s{background:var(--col-s);color:#fff}
+th.h-o{background:var(--col-o);color:#fff}
+td.cand{font-weight:800;text-align:left}
+td.cand small{display:block;color:var(--muted);font-weight:600}
+td.oa{font-family:'Space Grotesk';font-weight:800;font-size:1.15rem;color:var(--em)}
+td.na{color:var(--muted);font-style:italic}
+.pending{display:inline-flex;align-items:center;gap:6px;color:var(--col-w);font-weight:700;font-size:.85rem}
+.dots::after{content:'…';animation:dots 1.2s infinite}
+@keyframes dots{0%{content:'.'}33%{content:'..'}66%{content:'...'}}
+.note{color:var(--muted);font-size:.8rem;margin-top:12px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+@media(max-width:760px){.cards{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px;box-shadow:var(--shadow)}
+.card h3{font-size:.95rem;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.dot{width:10px;height:10px;border-radius:99px;display:inline-block}
+.big{font-family:'Space Grotesk';font-weight:800;font-size:2rem;line-height:1.1}
+.big small{font-size:.85rem;color:var(--muted);font-weight:600;font-family:Inter}
+.fb{margin-bottom:26px}
+.fb h2{font-size:1.2rem;margin-bottom:12px}
+.fb-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--col-w);border-radius:12px;padding:18px;margin-bottom:12px}
+.fb-card h4{font-size:.9rem;margin-bottom:6px;color:var(--col-w)}
+.fb-card p{font-size:.92rem;white-space:pre-wrap}
+.fb-card .bandtag{float:right;font-family:'Space Grotesk';font-weight:800;font-size:1.15rem;color:var(--text)}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:12px;padding:13px 26px;font-family:'Space Grotesk';font-weight:700;font-size:1rem;cursor:pointer;border:1.5px solid transparent;text-decoration:none;transition:.15s}
+.btn-grad{background:linear-gradient(135deg,var(--em),var(--em-bright));color:#fff}
+.btn-grad:hover{filter:brightness(1.07)}
+.btn-ghost{background:transparent;border-color:var(--border);color:var(--text)}
+.btn-ghost:hover{border-color:var(--em);color:var(--em)}
+.retry{display:none;margin-top:8px}
+</style>
+</head>
+<body>
+<header class="site"><div class="wrap hrow">
+  <a class="wordmark" href="index.html">pangea<b>8</b><small>FULL MOCK</small></a>
+  <button class="btn btn-ghost" style="padding:8px 16px;font-size:.85rem" onclick="P8M.toggleTheme()">◐ Theme</button>
+</div></header>
+
+<main class="wrap">
+  <div class="congrats">
+    <h1>Your Result Sheet 🎉</h1>
+    <p>Computer-delivered IELTS Full Mock — marked instantly by pangea8.</p>
+  </div>
+
+  <div class="sheet">
+    <table class="report">
+      <tr class="brandrow"><td colspan="8"><div class="bd"><span class="bm">pangea<b>8</b> · FULL MOCK</span><span class="dt" id="rDate"></span></div></td></tr>
+      <tr>
+        <th class="h-cand" rowspan="2">CANDIDATE</th>
+        <th class="h-l" rowspan="2">LISTENING</th>
+        <th class="h-r" rowspan="2">READING</th>
+        <th class="h-w" colspan="3">WRITING</th>
+        <th class="h-s" rowspan="2">SPEAKING</th>
+        <th class="h-o" rowspan="2">OVERALL</th>
+      </tr>
+      <tr>
+        <th class="h-wsub">Task 1</th><th class="h-wsub">Task 2</th><th class="h-wsub">Overall</th>
+      </tr>
+      <tr>
+        <td class="cand" id="cCand">—</td>
+        <td id="cL">—</td>
+        <td id="cR">—</td>
+        <td id="cW1"><span class="pending"><span class="dots"></span></span></td>
+        <td id="cW2"><span class="pending"><span class="dots"></span></span></td>
+        <td id="cW"><span class="pending">AI marking<span class="dots"></span></span></td>
+        <td class="na" id="cS">N/A</td>
+        <td class="oa" id="cO"><span class="pending"><span class="dots"></span></span></td>
+      </tr>
+    </table>
+    <p class="note">Listening & Reading show band (raw score /40). Writing bands are estimated by the pangea8 AI examiner using official IELTS descriptors. Speaking is not part of the online mock — the overall band is the average of the three completed skills, rounded to the nearest 0.5.</p>
+    <button class="btn btn-ghost retry" id="retryBtn">↻ Retry AI marking</button>
+  </div>
+
+  <div class="cards">
+    <div class="card"><h3><span class="dot" style="background:var(--col-l)"></span>Listening</h3><div class="big" id="dL">—</div><small id="dLraw" style="color:var(--muted);font-weight:600"></small></div>
+    <div class="card"><h3><span class="dot" style="background:var(--col-r)"></span>Reading</h3><div class="big" id="dR">—</div><small id="dRraw" style="color:var(--muted);font-weight:600"></small></div>
+    <div class="card"><h3><span class="dot" style="background:var(--col-w)"></span>Writing</h3><div class="big" id="dW">—</div><small id="dWraw" style="color:var(--muted);font-weight:600"></small></div>
+  </div>
+
+  <div class="fb" id="fbWrap" style="display:none">
+    <h2>AI Examiner Feedback — Writing</h2>
+    <div class="fb-card" id="fb1"><span class="bandtag" id="fb1band"></span><h4>TASK 1</h4><p id="fb1txt"></p></div>
+    <div class="fb-card" id="fb2"><span class="bandtag" id="fb2band"></span><h4>TASK 2</h4><p id="fb2txt"></p></div>
+  </div>
+
+  <div class="actions">
+    <a class="btn btn-grad" href="index.html" onclick="P8M.clearAttempt()">Back to Full Mock home</a>
+    <a class="btn btn-ghost" href="https://pangea8.com/ielts-hub/">Free practice hub →</a>
+  </div>
+</main>
+
+<script>
+(function(){
+'use strict';
+var A = P8M.requireStage('result');
+if (!A) return;
+var $ = function(id){ return document.getElementById(id); };
+
+var L = P8M.getPart('p8m_listening');
+var R = P8M.getPart('p8m_reading');
+var W = P8M.getPart('p8m_writing');
+
+var bandL = L ? P8M.bandL(L.raw) : null;
+var bandR = R ? P8M.bandR(R.raw) : null;
+
+var candNo = '№ ' + ('000000' + (A.startedAt % 1000000)).slice(-6);
+$('cCand').innerHTML = P8M.esc(A.name || 'Candidate') + '<small>' + candNo + '</small>';
+$('rDate').textContent = new Date(A.startedAt).toLocaleString('en-GB', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
+
+function fmtCell(band, raw){ return band == null ? 'N/A' : P8M.fmtBand(band) + ' (' + raw + ')'; }
+$('cL').textContent = fmtCell(bandL, L && L.raw);
+$('cR').textContent = fmtCell(bandR, R && R.raw);
+$('dL').textContent = P8M.fmtBand(bandL);
+$('dR').textContent = P8M.fmtBand(bandR);
+$('dLraw').textContent = L ? ('Raw score: ' + L.raw + ' / ' + L.total) : '';
+$('dRraw').textContent = R ? ('Raw score: ' + R.raw + ' / ' + R.total) : '';
+
+var state = { w1: null, w2: null, w: null, overall: null, fb1: '', fb2: '' };
+
+function words(t){ var m = String(t||'').trim().match(/\S+/g); return m ? m.length : 0; }
+function clampBand(x){
+  x = Number(x);
+  if (isNaN(x)) return null;
+  return Math.max(0, Math.min(9, Math.round(x * 2) / 2));
+}
+
+function renderWriting(){
+  $('cW1').textContent = state.w1 == null ? 'N/A' : P8M.fmtBand(state.w1);
+  $('cW2').textContent = state.w2 == null ? 'N/A' : P8M.fmtBand(state.w2);
+  $('cW').textContent = state.w == null ? 'N/A' : P8M.fmtBand(state.w);
+  $('dW').textContent = P8M.fmtBand(state.w);
+  $('dWraw').textContent = 'Task 1: ' + (W ? W.w1 : 0) + ' words · Task 2: ' + (W ? W.w2 : 0) + ' words';
+  if (state.fb1 || state.fb2) {
+    $('fbWrap').style.display = '';
+    $('fb1txt').textContent = state.fb1 || '—';
+    $('fb2txt').textContent = state.fb2 || '—';
+    $('fb1band').textContent = state.w1 == null ? '' : 'Band ' + P8M.fmtBand(state.w1);
+    $('fb2band').textContent = state.w2 == null ? '' : 'Band ' + P8M.fmtBand(state.w2);
+  }
+}
+function renderOverall(){
+  var parts = [bandL, bandR, state.w].filter(function(b){ return b != null; });
+  state.overall = parts.length ? P8M.halfRound(parts.reduce(function(a,b){ return a+b; }, 0) / parts.length) : null;
+  $('cO').textContent = P8M.fmtBand(state.overall);
+}
+
+function markingFailed(msg){
+  $('cW1').textContent = 'N/A';
+  $('cW2').textContent = 'N/A';
+  $('cW').innerHTML = '<span style="color:var(--muted);font-style:italic">unmarked</span>';
+  $('dW').textContent = '—';
+  $('retryBtn').style.display = 'inline-flex';
+  renderOverall();
+  P8M.toast(msg || 'AI marking failed — you can retry.');
+}
+
+function gradeWriting(){
+  if (!W || (words(W.t1) < 20 && words(W.t2) < 20)) {
+    state.w1 = words(W && W.t1) ? 1 : 0;
+    state.w2 = words(W && W.t2) ? 1 : 0;
+    state.w = 0;
+    state.fb1 = 'No assessable response was provided.';
+    state.fb2 = 'No assessable response was provided.';
+    renderWriting(); renderOverall(); persist();
+    return;
+  }
+  var prompt =
+    'You are a strict, experienced IELTS Writing examiner. Mark the two responses below using the official IELTS band descriptors ' +
+    '(Task Achievement/Response, Coherence & Cohesion, Lexical Resource, Grammatical Range & Accuracy). Be realistic — real-exam strictness. ' +
+    'Penalise under-length answers (Task 1 minimum 150 words, Task 2 minimum 250 words). ' +
+    'If a response is empty, off-topic, memorised or under 20 words, give it band 1.0. ' +
+    'Return ONLY valid JSON, with no markdown fences and no other text, exactly in this shape: ' +
+    '{"task1":{"band":6.5,"comment":"2-4 sentence examiner comment"},"task2":{"band":6.0,"comment":"2-4 sentence examiner comment"}}\n\n' +
+    '=== TASK 1 QUESTION ===\n' + (W.q1 || '') + '\n\n' +
+    '=== TASK 1 RESPONSE (' + words(W.t1) + ' words) ===\n' + (W.t1 || '(empty)') + '\n\n' +
+    '=== TASK 2 QUESTION ===\n' + (W.q2 || '') + '\n\n' +
+    '=== TASK 2 RESPONSE (' + words(W.t2) + ' words) ===\n' + (W.t2 || '(empty)');
+
+  fetch(P8M.CONFIG.feedbackEndpoint, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ essay: prompt })
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(res){
+    var txt = (res && (res.feedback || res.reply)) || '';
+    var m = String(txt).match(/\{[\s\S]*\}/);
+    if (!m) throw new Error('no JSON in AI reply');
+    var j = JSON.parse(m[0]);
+    var b1 = clampBand(j.task1 && j.task1.band);
+    var b2 = clampBand(j.task2 && j.task2.band);
+    if (b1 == null || b2 == null) throw new Error('bands missing');
+    state.w1 = b1;
+    state.w2 = b2;
+    state.w = P8M.halfRound((b1 + 2 * b2) / 3);
+    state.fb1 = String((j.task1 && j.task1.comment) || '').trim();
+    state.fb2 = String((j.task2 && j.task2.comment) || '').trim();
+    renderWriting(); renderOverall(); persist();
+  })
+  .catch(function(err){
+    console.warn('AI marking', err);
+    markingFailed();
+  });
+}
+$('retryBtn').addEventListener('click', function(){
+  $('retryBtn').style.display = 'none';
+  $('cW').innerHTML = '<span class="pending">AI marking<span class="dots"></span></span>';
+  gradeWriting();
+});
+
+/* save once (Firestore + local history) */
+function persist(){
+  if (sessionStorage.getItem('p8m_saved')) return;
+  sessionStorage.setItem('p8m_saved', '1');
+  var rec = {
+    uid: A.uid, name: A.name || '', mockId: A.mockId,
+    l: bandL, lraw: L ? L.raw : null,
+    r: bandR, rraw: R ? R.raw : null,
+    w1: state.w1, w2: state.w2, w: state.w,
+    overall: state.overall,
+    fb1: (state.fb1 || '').slice(0, 1200), fb2: (state.fb2 || '').slice(0, 1200),
+    ts: Date.now()
+  };
+  try {
+    var h = JSON.parse(localStorage.getItem('p8m_history') || '[]');
+    h.push({ name: rec.name, l: rec.l, r: rec.r, w: rec.w, overall: rec.overall, ts: rec.ts });
+    localStorage.setItem('p8m_history', JSON.stringify(h.slice(-100)));
+  } catch(e){}
+  P8M.ready.then(function(fb){
+    if (!fb || fb.dev || !fb.user) return;
+    fb.db.collection('mock_results').add(rec).catch(function(e){ console.warn('save result', e); });
+  });
+}
+
+renderOverall();
+gradeWriting();
+})();
+</script>
+</body>
+</html>

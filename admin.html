@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — pangea8 Full Mock</title>
+<meta name="robots" content="noindex,nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="mock.js"></script>
+<style>
+:root, html[data-p8m-theme="light"]{
+  --bg:#FAFAF9; --surface:#fff; --surface2:#F4F4F2; --text:#0a0a0a; --muted:#6b7280;
+  --border:#e5e7eb; --em:#0D9268; --em-bright:#0A8A60; --danger:#b42318;
+  --shadow:0 4px 18px rgba(10,10,10,.07); --r:18px;
+}
+html[data-p8m-theme="dark"]{
+  --bg:#0A0A0A; --surface:#111; --surface2:#171717; --text:#fafafa; --muted:#a1a1aa;
+  --border:#232323; --em:#10B981; --em-bright:#34D399; --danger:#f0928a;
+  --shadow:0 4px 20px rgba(0,0,0,.5);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+h1,h2,h3{font-family:'Space Grotesk',Inter,sans-serif;letter-spacing:-.02em}
+.wrap{max-width:880px;margin:0 auto;padding:0 18px}
+header.site{border-bottom:1px solid var(--border)}
+.hrow{display:flex;align-items:center;justify-content:space-between;height:62px}
+.wordmark{font-family:'Space Grotesk';font-weight:700;font-size:1.2rem;text-decoration:none;color:var(--text)}
+.wordmark b{color:var(--em)}
+main{padding:34px 0 90px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px;box-shadow:var(--shadow);margin-bottom:18px}
+.card h2{font-size:1.05rem;margin-bottom:12px}
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:12px;padding:10px 18px;font-family:'Space Grotesk';font-weight:700;font-size:.92rem;cursor:pointer;border:1.5px solid transparent;transition:.15s;text-decoration:none}
+.btn-grad{background:linear-gradient(135deg,var(--em),var(--em-bright));color:#fff}
+.btn-ghost{background:transparent;border-color:var(--border);color:var(--text)}
+.btn-ghost:hover{border-color:var(--em);color:var(--em)}
+.btn-danger{background:transparent;border-color:var(--danger);color:var(--danger)}
+.inp{border:1.5px solid var(--border);background:var(--surface2);color:var(--text);border-radius:10px;padding:9px 12px;font-size:.92rem;font-family:inherit;outline:none}
+.inp:focus{border-color:var(--em)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
+.req{border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px;display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;background:var(--surface2);font-size:.9rem}
+.req b{font-family:'Space Grotesk'}
+.req small{color:var(--muted);display:block}
+.muted{color:var(--muted);font-size:.88rem}
+.gate{text-align:center;padding:80px 0}
+table.res{width:100%;border-collapse:collapse;font-size:.85rem}
+table.res th,table.res td{border:1px solid var(--border);padding:7px 9px;text-align:center}
+table.res th{background:var(--surface2)}
+table.res td:first-child{text-align:left}
+#adminUI{display:none}
+.balpill{font-family:'Space Grotesk';font-weight:800;font-size:1.5rem;color:var(--em)}
+code{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:2px 7px;font-size:.8rem;word-break:break-all}
+</style>
+</head>
+<body>
+<header class="site"><div class="wrap hrow">
+  <a class="wordmark" href="index.html">pangea<b>8</b> · Full Mock Admin</a>
+  <button class="btn btn-ghost" onclick="P8M.toggleTheme()">◐</button>
+</div></header>
+
+<main class="wrap">
+  <div class="gate" id="gate">
+    <h1 style="margin-bottom:10px">Admin panel</h1>
+    <p class="muted" style="margin-bottom:20px">Owner access only.</p>
+    <button class="btn btn-grad" id="gateBtn">Sign in with Google</button>
+    <p class="muted" id="gateMsg" style="margin-top:14px"></p>
+  </div>
+
+  <div id="adminUI">
+    <div class="card">
+      <h2>My coins <span class="balpill" id="myCoins">—</span></h2>
+      <div class="row">
+        <button class="btn btn-grad" data-add="10">+10 to me</button>
+        <button class="btn btn-grad" data-add="50">+50 to me</button>
+        <input class="inp" id="meCustom" type="number" placeholder="Custom" style="width:110px">
+        <button class="btn btn-ghost" id="meAddBtn">Add</button>
+      </div>
+      <p class="muted">My UID: <code id="myUid"></code></p>
+    </div>
+
+    <div class="card">
+      <h2>Pending coin requests</h2>
+      <div id="reqList"><p class="muted">Loading…</p></div>
+    </div>
+
+    <div class="card">
+      <h2>Credit any account</h2>
+      <div class="row">
+        <input class="inp" id="cUid" placeholder="Student UID" style="flex:1;min-width:220px">
+        <input class="inp" id="cCoins" type="number" placeholder="Coins" style="width:100px">
+        <button class="btn btn-grad" id="cBtn">Credit</button>
+      </div>
+      <p class="muted">The student's UID is shown in their coin request; you can also credit negative values to correct mistakes.</p>
+    </div>
+
+    <div class="card">
+      <h2>Recent mock results</h2>
+      <div id="resBox" style="overflow-x:auto"><p class="muted">Loading…</p></div>
+    </div>
+  </div>
+</main>
+
+<script>
+(function(){
+'use strict';
+var $ = function(id){ return document.getElementById(id); };
+var C = P8M.CONFIG, FB = null;
+
+function isAdmin(u){ return P8M.DEV || (u && u.email === C.adminEmail); }
+
+function walletRef(uid){ return FB.db.collection('wallets').doc(uid); }
+function credit(uid, n){
+  if (P8M.DEV) {
+    var cur = Number(localStorage.getItem('p8m_dev_coins') || 0) + n;
+    localStorage.setItem('p8m_dev_coins', String(cur));
+    return Promise.resolve(cur);
+  }
+  return FB.db.runTransaction(function(tx){
+    return tx.get(walletRef(uid)).then(function(snap){
+      var coins = (snap.exists ? (snap.data().coins || 0) : 0) + n;
+      if (snap.exists) tx.update(walletRef(uid), { coins: coins, updatedAt: Date.now() });
+      else tx.set(walletRef(uid), { coins: coins, createdAt: Date.now() });
+      return coins;
+    });
+  });
+}
+
+function refreshMy(){
+  if (P8M.DEV) { $('myCoins').textContent = localStorage.getItem('p8m_dev_coins') || 0; return; }
+  walletRef(FB.user.uid).get().then(function(s){ $('myCoins').textContent = s.exists ? (s.data().coins || 0) : 0; });
+}
+
+function loadRequests(){
+  if (P8M.DEV) { $('reqList').innerHTML = '<p class="muted">No pending requests (dev mode).</p>'; return; }
+  FB.db.collection('coin_requests').where('status', '==', 'pending').get().then(function(qs){
+    if (qs.empty) { $('reqList').innerHTML = '<p class="muted">No pending requests 🎉</p>'; return; }
+    var docs = [];
+    qs.forEach(function(d){ docs.push({ id: d.id, data: d.data() }); });
+    docs.sort(function(a, b){ return (b.data.ts || 0) - (a.data.ts || 0); });
+    var box = $('reqList'); box.innerHTML = '';
+    docs.forEach(function(item){
+      var d = item.data;
+      var el = document.createElement('div');
+      el.className = 'req';
+      el.innerHTML = '<span><b>' + P8M.esc(d.name || d.email || '?') + '</b> — ' + d.coins + ' coins / ' +
+        P8M.uzs(d.uzs || 0) + ' UZS<small>' + P8M.esc(d.email || '') + ' · ' +
+        new Date(d.ts || 0).toLocaleString('en-GB') + '</small><small>uid: <code>' + P8M.esc(d.uid) + '</code></small></span>' +
+        '<span style="display:flex;gap:6px"><button class="btn btn-grad" data-ok>Approve</button><button class="btn btn-danger" data-no>Reject</button></span>';
+      el.querySelector('[data-ok]').addEventListener('click', function(){
+        this.disabled = true;
+        FB.db.runTransaction(function(tx){
+          var wr = walletRef(d.uid), rr = FB.db.collection('coin_requests').doc(item.id);
+          return tx.get(wr).then(function(snap){
+            var coins = (snap.exists ? (snap.data().coins || 0) : 0) + d.coins;
+            if (snap.exists) tx.update(wr, { coins: coins, updatedAt: Date.now() });
+            else tx.set(wr, { coins: coins, createdAt: Date.now() });
+            tx.update(rr, { status: 'approved', approvedAt: Date.now() });
+          });
+        }).then(function(){ P8M.toast('Approved — ' + d.coins + ' coins added'); loadRequests(); })
+          .catch(function(e){ console.warn(e); P8M.toast('Failed: ' + (e.message || e.code)); });
+      });
+      el.querySelector('[data-no]').addEventListener('click', function(){
+        if (!confirm('Reject this request?')) return;
+        FB.db.collection('coin_requests').doc(item.id).update({ status: 'rejected', rejectedAt: Date.now() })
+          .then(loadRequests);
+      });
+      box.appendChild(el);
+    });
+  }).catch(function(e){
+    $('reqList').innerHTML = '<p class="muted">Could not load requests: ' + P8M.esc(e.message || e.code) + '</p>';
+  });
+}
+
+function loadResults(){
+  if (P8M.DEV) { $('resBox').innerHTML = '<p class="muted">Dev mode — results are local only.</p>'; return; }
+  FB.db.collection('mock_results').orderBy('ts', 'desc').limit(25).get().then(function(qs){
+    if (qs.empty) { $('resBox').innerHTML = '<p class="muted">No mock results yet.</p>'; return; }
+    var html = '<table class="res"><tr><th>Candidate</th><th>L</th><th>R</th><th>W1</th><th>W2</th><th>W</th><th>S</th><th>Overall</th><th>Date</th></tr>';
+    qs.forEach(function(doc){
+      var d = doc.data();
+      var f = P8M.fmtBand;
+      html += '<tr><td>' + P8M.esc(d.name || '') + '</td><td>' + f(d.l) + ' (' + (d.lraw == null ? '–' : d.lraw) + ')</td><td>' +
+        f(d.r) + ' (' + (d.rraw == null ? '–' : d.rraw) + ')</td><td>' + f(d.w1) + '</td><td>' + f(d.w2) + '</td><td>' + f(d.w) +
+        '</td><td>N/A</td><td><b>' + f(d.overall) + '</b></td><td>' + new Date(d.ts || 0).toLocaleDateString('en-GB') + '</td></tr>';
+    });
+    $('resBox').innerHTML = html + '</table>';
+  }).catch(function(e){
+    $('resBox').innerHTML = '<p class="muted">Could not load results: ' + P8M.esc(e.message || e.code) + '</p>';
+  });
+}
+
+function boot(u){
+  if (!isAdmin(u)) {
+    $('gateMsg').textContent = 'This account (' + (u && u.email || 'unknown') + ') is not the owner account.';
+    return;
+  }
+  $('gate').style.display = 'none';
+  $('adminUI').style.display = 'block';
+  $('myUid').textContent = FB.user ? FB.user.uid : 'dev';
+  refreshMy();
+  loadRequests();
+  loadResults();
+  document.querySelectorAll('[data-add]').forEach(function(b){
+    b.addEventListener('click', function(){
+      credit(FB.user.uid, Number(b.dataset.add)).then(function(){ P8M.toast('Added'); refreshMy(); });
+    });
+  });
+  $('meAddBtn').addEventListener('click', function(){
+    var n = Number($('meCustom').value || 0);
+    if (!n) return;
+    credit(FB.user.uid, n).then(function(){ P8M.toast('Added ' + n); refreshMy(); $('meCustom').value = ''; });
+  });
+  $('cBtn').addEventListener('click', function(){
+    var uid = $('cUid').value.trim(), n = Number($('cCoins').value || 0);
+    if (!uid || !n) { P8M.toast('Enter UID and coins'); return; }
+    credit(uid, n).then(function(bal){ P8M.toast('Done — new balance: ' + bal); $('cUid').value = ''; $('cCoins').value = ''; })
+      .catch(function(e){ P8M.toast('Failed: ' + (e.message || e.code)); });
+  });
+}
+
+$('gateBtn').addEventListener('click', function(){
+  P8M.signInGoogle().then(function(u){ FB.user = u; boot(u); })
+    .catch(function(){ P8M.toast('Sign-in failed'); });
+});
+
+P8M.ready.then(function(fb){
+  if (!fb) { $('gateMsg').textContent = 'Firebase unavailable.'; return; }
+  FB = fb;
+  if (fb.user) boot(fb.user);
+});
+})();
+</script>
+</body>
+</html>

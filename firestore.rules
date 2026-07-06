@@ -1,0 +1,61 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.email == 'polatovmaqsudjon1@gmail.com';
+    }
+
+    /* ===== existing hub collections (unchanged behaviour) ===== */
+    match /students/{uid} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.uid == uid;
+    }
+    match /results/{id} {
+      allow read: if true;
+      allow create: if request.auth != null
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.score is number
+        && request.resource.data.score >= 0
+        && request.resource.data.score <= 40;
+      allow update, delete: if false;
+    }
+
+    /* ===== Full Mock: coin wallets =====
+       Owner can only SPEND (balance can only go down);
+       only the admin can add coins. */
+    match /wallets/{uid} {
+      allow read: if isAdmin() || (request.auth != null && request.auth.uid == uid);
+      allow create: if isAdmin() || (request.auth != null
+        && request.auth.uid == uid
+        && request.resource.data.coins == 0);
+      allow update: if isAdmin() || (request.auth != null
+        && request.auth.uid == uid
+        && request.resource.data.coins is number
+        && resource.data.coins is number
+        && request.resource.data.coins >= 0
+        && request.resource.data.coins < resource.data.coins);
+      allow delete: if isAdmin();
+    }
+
+    /* ===== Full Mock: top-up requests (manual card transfer) ===== */
+    match /coin_requests/{id} {
+      allow create: if request.auth != null
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.status == 'pending'
+        && request.resource.data.coins is number
+        && request.resource.data.coins > 0
+        && request.resource.data.coins <= 1000;
+      allow read: if isAdmin() || (request.auth != null && resource.data.uid == request.auth.uid);
+      allow update, delete: if isAdmin();
+    }
+
+    /* ===== Full Mock: results ===== */
+    match /mock_results/{id} {
+      allow read: if true;
+      allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+  }
+}
