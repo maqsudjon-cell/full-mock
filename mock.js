@@ -231,7 +231,7 @@
     '<stop offset="0" stop-color="#34D399"/><stop offset="1" stop-color="#047857"/></linearGradient></defs>' +
     '<circle cx="12" cy="12" r="11" fill="url(#p8mCoinG)"/>' +
     '<circle cx="12" cy="12" r="8.4" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1" stroke-dasharray="2 1.6"/>' +
-    '<text x="12" y="16.4" text-anchor="middle" font-family="Space Grotesk,Inter,sans-serif" font-size="12" font-weight="800" fill="#fff">8</text></svg>';
+    '<text x="12" y="16.4" text-anchor="middle" font-family="Space Grotesk,Inter,sans-serif" font-size="12" font-weight="800" fill="#fff">P</text></svg>';
 
   window.P8M = {
     CONFIG: CONFIG, DEV: DEV,
