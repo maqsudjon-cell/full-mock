@@ -8,14 +8,25 @@ IELTS-style result sheet. Lives at **https://pangea8.com/full-mock/**.
 
 | File | What it does |
 |---|---|
-| `index.html` | Landing: Google/email sign-in, coin balance, buy-coins modal (card transfer + Telegram receipt), start mock, local results history |
-| `listening.html` | Part 1 — Test 14 audio (streams from `pangea8.com/test14/*.mp3`), simulation mode only, auto-advances to Reading |
-| `reading.html` | Part 2 — CDI Reading 5 engine, 60-min timer, auto-advances to Writing |
-| `writing.html` | Part 3 — Task 1 (cars table) + Task 2 (change essay), 60-min timer |
-| `result.html` | IELTS-style result sheet (no branch column, Speaking = N/A), AI examiner bands + feedback for writing, saves to Firestore `mock_results` |
+| `index.html` | Landing: Google/email sign-in, coin balance, buy-coins modal (card transfer + Telegram receipt), 5 mock cards, local results history |
+| `listening[N].html` | Part 1 — audio streams from the source test repo, simulation mode only, auto-advances to Reading |
+| `reading[N].html` | Part 2 — CDI reading engine, 60-min timer, auto-advances to Writing |
+| `writing[N].html` | Part 3 — Task 1 + Task 2 with 60-min timer (charts are inline SVG) |
+| `result.html` | Shared IELTS-style result sheet (no branch column, Speaking = N/A), AI examiner bands + feedback for writing, saves to Firestore `mock_results` |
 | `admin.html` | Owner only (`polatovmaqsudjon1@gmail.com`): add coins to yourself (free-coin backdoor), approve/reject top-up requests, credit any UID, view all results |
-| `mock.js` | Shared config — **prices, mock cost, card number, Telegram, admin email are all edited here** |
+| `mock.js` | Shared config — **prices, mock cost, card number, Telegram, admin email, mock list are all edited here** |
+| `build_mocks.py` | Generator that produced mocks 2–5 from hub engines (edit the `MOCKS`/`WRITING` maps to add more) |
 | `firestore.rules` | Security rules — must be pasted into the Firebase console once (see below) |
+
+### Mock contents (sources)
+
+| Mock | Listening | Reading | Writing T1 | Writing T2 |
+|---|---|---|---|---|
+| 1 | Test 14 | CDI Reading 5 | Cars per 1000 (table) | Change in life |
+| 2 | Test 19 | CDI Reading 6 | Car survey (2 bar charts) | Financial aid |
+| 3 | Test 20 | CDI Reading 7 | UK household/leisure (table+chart) | Improve vs rest the mind |
+| 4 | Test 21 | CDI Reading 1 | Library survey (pie+table) | Clubs vs family time |
+| 5 | Test 22 | CDI Reading 2 | Internet access (table, authored in-house) | Educational leisure |
 
 ## One-time setup (required before coins work)
 

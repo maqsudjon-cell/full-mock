@@ -115,36 +115,17 @@ textarea.essay{flex:1;resize:none;border:none;outline:none;background:transparen
 
 <script>
 'use strict';
-var MOCK_ATTEMPT = window.P8M ? P8M.requireStage('writing', 1) : null;
+var MOCK_ATTEMPT = window.P8M ? P8M.requireStage('writing', 3) : null;
 var WSTATE_KEY = 'p8m_writing_state';
 var DURATION = 60 * 60 * 1000;
 
 var TASKS = {
-  1: {
-    min: 150,
-    html: '<h2>Writing Task 1</h2>' +
-      '<p class="tasknote">You should spend about <b>20 minutes</b> on this task.</p>' +
-      '<div class="taskbox">The table below shows the number of cars per 1000 people in five European countries in three years and compares them with the European average.<br><br>Summarise the information by selecting and reporting the main features, and make comparisons where relevant.</div>' +
-      '<p class="minwords">Write at least <b>150 words</b>.</p>' +
-      '<table class="data"><caption>The number of cars per 1000 people</caption>' +
-      '<thead><tr><th>Country</th><th>2009</th><th>2010</th><th>2011</th></tr></thead><tbody>' +
-      '<tr><td>Country 1</td><td>400</td><td>450</td><td>350</td></tr>' +
-      '<tr><td>Country 2</td><td>550</td><td>600</td><td>570</td></tr>' +
-      '<tr><td>Country 3</td><td>600</td><td>650</td><td>620</td></tr>' +
-      '<tr><td>Country 4</td><td>700</td><td>700</td><td>700</td></tr>' +
-      '<tr><td>Country 5</td><td>870</td><td>920</td><td>990</td></tr>' +
-      '<tr><td>Average of 5</td><td>680</td><td>740</td><td>730</td></tr>' +
-      '</tbody></table>',
-    prompt: 'The table shows the number of cars per 1000 people in five European countries in 2009, 2010 and 2011, compared with the European average. Data — Country 1: 400/450/350; Country 2: 550/600/570; Country 3: 600/650/620; Country 4: 700/700/700; Country 5: 870/920/990; Average of 5: 680/740/730. Summarise the information by selecting and reporting the main features, and make comparisons where relevant.'
-  },
-  2: {
-    min: 250,
-    html: '<h2>Writing Task 2</h2>' +
-      '<p class="tasknote">You should spend about <b>40 minutes</b> on this task.</p>' +
-      '<div class="taskbox">Some people enjoy change in life, while other people try to avoid it.<br><br>What are the advantages and disadvantages of both approaches?</div>' +
-      '<p class="minwords">Write at least <b>250 words</b>. Give reasons for your answer and include any relevant examples from your own knowledge or experience.</p>',
-    prompt: 'Some people enjoy change in life, while other people try to avoid it. What are the advantages and disadvantages of both approaches?'
-  }
+  1: { min: 150,
+       html: "<h2>Writing Task 1</h2><p class=\"tasknote\">You should spend about <b>20 minutes</b> on this task.</p><div class=\"taskbox\">The charts below show the comparison of time spent, in minutes per day, by males and females in the UK on household and leisure activities in 2008.<br><br>Summarise the information by selecting and reporting the main features, and make comparisons where relevant.</div><p class=\"minwords\">Write at least <b>150 words</b>.</p><table class=\"data\"><caption>Leisure activities (average minutes per day)</caption><thead><tr><th>Activity</th><th>Men</th><th>Women</th></tr></thead><tbody><tr><td>TV, video, radio</td><td>137</td><td>118</td></tr><tr><td>Reading</td><td>18</td><td>19</td></tr><tr><td>Sport</td><td>15</td><td>11</td></tr></tbody></table><svg viewBox=\"0 0 640 250\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" style=\"max-width:100%;height:auto;background:#fff\"><text x=\"320.0\" y=\"22\" text-anchor=\"middle\" font-size=\"15\" font-weight=\"bold\" font-family=\"Arial,Helvetica,sans-serif\" fill=\"#111\">Household activities (average minutes per day)</text><line x1=\"200.0\" y1=\"40\" x2=\"200.0\" y2=\"216\" stroke=\"#999\" stroke-dasharray=\"none\"/><text x=\"200.0\" y=\"234\" text-anchor=\"middle\" font-size=\"11\" font-family=\"Arial,Helvetica,sans-serif\" fill=\"#444\">0</text><line x1=\"305.0\" y1=\"40\" x2=\"305.0\" y2=\"216\" stroke=\"#e5e7eb\" stroke-dasharray=\"3 3\"/><text x=\"305.0\" y=\"234\" text-anchor=\"middle\" font-size=\"11\" font-family=\"Arial,Helvetica,sans-serif\" fill=\"#444\">20</text><line x1=\"410.0\" y1=\"40\" x2=\"410.0\" y2=\"216\" stroke=\"#e5e7eb\" stroke-dasharray=\"3 3\"/><text x=\"410.0\" y=\"234\" text-anchor=\"middle\" font-size=\"11\" font-family=\"Arial,Helvetica,sans-serif\" fill=\"#444\">40</text><line x1=\"515.0\" y1=\"40\" x2=\"515.0\" y2=\"216\" stroke=\"#e5e7eb\" stroke-dasharray=\"3 3\"/><text x=\"515.0\" y=\"234\" text-anchor=\"middle\" font-size=\"11\" font-family=\"Arial,Helvetica,sans-serif\" fill=\"#444\">60</text><line x1=\"620.0\" y1=\"40\" x2=\"620.0\" y2=\"216\" stroke=\"#e5e7eb\" stroke-dasharray=\"3 3\"/><text x=\"620.0\" y=\"234\" text-anchor=\"middle\" font-size=\"11\" font-family=\"Arial,Helvetica,sans-serif\" fill=\"#444\">80</text><rect x=\"200\" y=\"46\" width=\"141.8\" height=\"13\" fill=\"#4b5563\"/><rect x=\"200\" y=\"62\" width=\"393.8\" height=\"13\" fill=\"#f59e0b\"/><text x=\"192\" y=\"65\" text-anchor=\"end\" font-size=\"12\" font-family=\"Arial,Helvetica,sans-serif\" fill=\"#333\">Cooking and washing</text><rect x=\"200\" y=\"90\" width=\"126.0\" height=\"13\" fill=\"#4b5563\"/><rect x=\"200\" y=\"106\" width=\"173.2\" height=\"13\" fill=\"#f59e0b\"/><text x=\"192\" y=\"109\" text-anchor=\"end\" font-size=\"12\" font-family=\"Arial,Helvetica,sans-serif\" fill=\"#333\">Shopping</text><rect x=\"200\" y=\"134\" width=\"105.0\" height=\"13\" fill=\"#4b5563\"/><rect x=\"200\" y=\"150\" width=\"36.8\" height=\"13\" fill=\"#f59e0b\"/><text x=\"192\" y=\"153\" text-anchor=\"end\" font-size=\"12\" font-family=\"Arial,Helvetica,sans-serif\" fill=\"#333\">Repair</text><rect x=\"200\" y=\"178\" width=\"63.0\" height=\"13\" fill=\"#4b5563\"/><rect x=\"200\" y=\"194\" width=\"157.5\" height=\"13\" fill=\"#f59e0b\"/><text x=\"192\" y=\"197\" text-anchor=\"end\" font-size=\"12\" font-family=\"Arial,Helvetica,sans-serif\" fill=\"#333\">Clothes washing and ironing</text><rect x=\"516\" y=\"36\" width=\"104\" height=\"44\" fill=\"#fff\" stroke=\"#e5e7eb\"/><rect x=\"524\" y=\"42\" width=\"12\" height=\"12\" fill=\"#4b5563\"/><text x=\"542\" y=\"52\" font-size=\"12\" font-family=\"Arial,Helvetica,sans-serif\" fill=\"#333\">Men</text><rect x=\"524\" y=\"60\" width=\"12\" height=\"12\" fill=\"#f59e0b\"/><text x=\"542\" y=\"70\" font-size=\"12\" font-family=\"Arial,Helvetica,sans-serif\" fill=\"#333\">Women</text></svg>",
+       prompt: "The table and bar chart compare time spent, in minutes per day, by UK men and women on leisure and household activities in 2008. Leisure (men/women): TV, video and radio 137/118; reading 18/19; sport 15/11. Household (men/women): cooking and washing 27/75; shopping 24/33; repair 20/7; clothes washing and ironing 12/30. Summarise the information by selecting and reporting the main features, and make comparisons where relevant." },
+  2: { min: 250,
+       html: "<h2>Writing Task 2</h2><p class=\"tasknote\">You should spend about <b>40 minutes</b> on this task.</p><div class=\"taskbox\">Some people think that it is important to use leisure time for activities that improve the mind, such as reading and doing word puzzles. Other people feel that it is important to rest the mind during leisure time.<br><br>Discuss both views and give your own opinion.</div><p class=\"minwords\">Write at least <b>250 words</b>. Give reasons for your answer and include any relevant examples from your own knowledge or experience.</p>",
+       prompt: "Some people think that it is important to use leisure time for activities that improve the mind, such as reading and doing word puzzles. Other people feel that it is important to rest the mind during leisure time. Discuss both views and give your own opinion." }
 };
 
 var S = { task: 1, texts: { 1: '', 2: '' }, deadline: null, timerInt: null, finished: false };

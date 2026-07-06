@@ -69,6 +69,14 @@ main{padding:42px 0 90px}
 .balance{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk';font-weight:800;font-size:2rem;margin:8px 0 14px}
 .balance .p8m-coin{width:30px;height:30px}
 .balance small{font-size:.85rem;color:var(--muted);font-weight:600;font-family:Inter}
+.mock-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:12px}
+.mock-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px 16px;box-shadow:var(--shadow);text-align:center;display:flex;flex-direction:column;gap:8px;align-items:center}
+.mock-card h4{font-family:'Space Grotesk';font-size:1.02rem}
+.mock-card .mprice{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:700;color:var(--em)}
+.mock-card .mprice .p8m-coin{width:15px;height:15px}
+.mock-card .done{font-size:.72rem;font-weight:700;color:var(--em);background:var(--em-soft);border-radius:999px;padding:2px 9px}
+html[data-p8m-theme="dark"] .mock-card .done{color:var(--em-bright)}
+.mock-card .btn{width:100%;padding:10px 12px;font-size:.9rem}
 .hist{margin-top:26px}
 .hist h3{font-size:1.05rem;margin-bottom:10px}
 .hist-row{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin-bottom:8px;background:var(--surface);font-size:.9rem;flex-wrap:wrap}
@@ -135,7 +143,7 @@ html[data-p8m-theme="light"] .req-ok{color:#065f46}
   <div class="grid">
     <div class="card">
       <div class="mock-head">
-        <h2 id="mockTitle">Full Mock 1</h2>
+        <h2 id="mockTitle">How it works</h2>
         <span class="price" id="mockPrice"></span>
       </div>
       <p class="mock-desc">Computer-delivered Academic mock. Once you start, the three parts run in order — just like the real test centre.</p>
@@ -144,7 +152,6 @@ html[data-p8m-theme="light"] .req-ok{color:#065f46}
         <div class="step"><span class="n">2</span><div><b>Reading · 60 min</b><small>3 academic passages, 40 questions, real CD-IELTS interface.</small></div></div>
         <div class="step"><span class="n">3</span><div><b>Writing · 60 min</b><small>Task 1 report + Task 2 essay. AI examiner feedback and band estimate.</small></div></div>
       </div>
-      <button class="btn btn-grad" id="startBtn" disabled>Loading…</button>
       <p class="signin-hint" id="startHint"></p>
     </div>
 
@@ -155,6 +162,11 @@ html[data-p8m-theme="light"] .req-ok{color:#065f46}
       <p style="font-size:.83rem;color:var(--muted)">1 full mock = <b id="costInline"></b> coins. Coins are added after your card-transfer receipt is confirmed (usually within a few hours).</p>
       <div class="req-ok" id="reqOk"></div>
     </div>
+  </div>
+
+  <div class="mocks">
+    <h3 style="font-size:1.15rem;margin:26px 0 12px">Choose your mock</h3>
+    <div class="mock-grid" id="mockGrid"></div>
   </div>
 
   <div class="hist">
@@ -192,7 +204,7 @@ html[data-p8m-theme="light"] .req-ok{color:#065f46}
 <div class="modal" id="startModal">
   <div class="mcard">
     <button class="mclose" onclick="closeModal('startModal')">✕</button>
-    <h2>Start Full Mock 1</h2>
+    <h2 id="startTitle">Start Full Mock</h2>
     <p class="sub">The exam runs Listening → Reading → Writing without a break.</p>
     <label style="font-size:.82rem;font-weight:700;color:var(--muted);display:block;margin-bottom:6px">CANDIDATE NAME (shown on your result sheet)</label>
     <input class="name-input" id="candName" maxlength="60" autocomplete="name">
@@ -215,7 +227,7 @@ var $ = function(id){ return document.getElementById(id); };
 
 $('yy').textContent = new Date().getFullYear();
 $('coinIco').innerHTML = P8M.COIN_SVG; $('coinIco2').innerHTML = P8M.COIN_SVG;
-$('mockPrice').innerHTML = P8M.COIN_SVG + ' ' + C.mockCost + ' coins';
+$('mockPrice').innerHTML = P8M.COIN_SVG + ' ' + C.mockCost + ' coins / mock';
 $('costInline').textContent = C.mockCost;
 $('startCost').innerHTML = C.mockCost + ' coins';
 $('cardNum').textContent = C.card.number;
@@ -253,14 +265,10 @@ function renderAuth(){
   if (u) {
     if (u.photoURL) $('avatarBtn').innerHTML = '<img src="' + P8M.esc(u.photoURL) + '" alt="">';
     else $('avatarBtn').textContent = (u.displayName || u.email || '?').trim()[0].toUpperCase();
-    $('startBtn').textContent = 'Start mock — ' + C.mockCost + ' coins';
-    $('startBtn').disabled = false;
     $('startHint').textContent = '';
     refreshWallet();
   } else {
-    $('startBtn').textContent = 'Sign in to start';
-    $('startBtn').disabled = false;
-    $('startHint').innerHTML = 'Google popup, or <a href="https://pangea8.com/signin.html?next=/full-mock/">sign in with email</a>.';
+    $('startHint').innerHTML = 'Sign in first: Google popup, or <a href="https://pangea8.com/signin.html?next=/full-mock/">sign in with email</a>.';
     $('coinBig').textContent = '—'; $('coinCount').textContent = '—';
   }
 }
@@ -315,26 +323,46 @@ $('paidBtn').addEventListener('click', function(){
 });
 
 /* start flow */
-$('startBtn').addEventListener('click', function(){
+var chosenMock = C.mocks[0];
+(function renderMockGrid(){
+  var done = {};
+  try {
+    JSON.parse(localStorage.getItem('p8m_history') || '[]').forEach(function(r){ done[r.m || 1] = true; });
+  } catch(e){}
+  var grid = $('mockGrid');
+  C.mocks.forEach(function(m){
+    var card = document.createElement('div');
+    card.className = 'mock-card';
+    card.innerHTML = '<h4>' + P8M.esc(m.title) + '</h4>' +
+      '<span class="mprice">' + P8M.COIN_SVG + C.mockCost + ' coins</span>' +
+      (done[m.n] ? '<span class="done">✓ taken</span>' : '') +
+      '<button class="btn btn-grad" data-n="' + m.n + '">Start</button>';
+    card.querySelector('button').addEventListener('click', function(){ startMock(m); });
+    grid.appendChild(card);
+  });
+})();
+function startMock(m){
   if (!fbCtx || !fbCtx.user) { doSignIn(); return; }
   var a = P8M.getAttempt();
   if (a && a.stage !== 'result') {
-    if (confirm('You have an unfinished mock (' + a.stage + '). Continue it?')) { location.href = a.stage + '.html'; return; }
+    if (confirm('You have an unfinished mock (' + a.stage + '). Continue it?')) { location.href = P8M.pageFor(a.stage, a.n); }
     return;
   }
+  chosenMock = m;
+  $('startTitle').textContent = 'Start ' + m.title;
   $('candName').value = (fbCtx.user.displayName || '').trim();
   $('startModal').classList.add('open');
-});
+}
 $('confirmStart').addEventListener('click', function(){
   var name = $('candName').value.trim() || (fbCtx.user.displayName || 'Candidate');
   $('confirmStart').disabled = true;
   P8M.spendCoins(fbCtx, C.mockCost).then(function(){
     P8M.clearAttempt();
     P8M.setAttempt({
-      mockId: C.mock.id, name: name, uid: fbCtx.user.uid,
+      mockId: chosenMock.id, n: chosenMock.n, name: name, uid: fbCtx.user.uid,
       email: fbCtx.user.email || '', stage: 'listening', startedAt: Date.now()
     });
-    location.href = 'listening.html';
+    location.href = P8M.pageFor('listening', chosenMock.n);
   }).catch(function(err){
     $('confirmStart').disabled = false;
     if (err && err.code === 'insufficient') { closeModal('startModal'); P8M.toast('Not enough coins — buy a package first.'); $('buyModal').classList.add('open'); }
@@ -352,7 +380,7 @@ $('confirmStart').addEventListener('click', function(){
   h.slice().reverse().slice(0, 12).forEach(function(r){
     var d = document.createElement('div'); d.className = 'hist-row';
     var date = new Date(r.ts).toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
-    d.innerHTML = '<span>' + P8M.esc(r.name || '') + ' · ' + date + '</span>' +
+    d.innerHTML = '<span>' + P8M.esc(r.name || '') + ' · Mock ' + (r.m || 1) + ' · ' + date + '</span>' +
       '<span class="bands"><span>L</span>' + P8M.fmtBand(r.l) + ' <span>R</span>' + P8M.fmtBand(r.r) +
       ' <span>W</span>' + P8M.fmtBand(r.w) + ' <span>S</span>N/A <span style="color:var(--em)">Overall</span><b style="color:var(--em)">' + P8M.fmtBand(r.overall) + '</b></span>';
     box.appendChild(d);
@@ -361,7 +389,7 @@ $('confirmStart').addEventListener('click', function(){
 
 /* boot */
 P8M.ready.then(function(fb){
-  if (!fb) { $('startBtn').textContent = 'Offline — try again later'; return; }
+  if (!fb) { $('startHint').textContent = 'Offline — try again later.'; return; }
   fbCtx = fb;
   if (fb.user && fb.user.email === C.adminEmail) $('adminLink').style.display = '';
   if (P8M.DEV) $('adminLink').style.display = '';

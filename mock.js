@@ -25,11 +25,13 @@
     telegramContact: 'https://t.me/mrbmp13',
     telegramHandle: '@mrbmp13',
     feedbackEndpoint: 'https://pangeya-ai.vercel.app/api/essay-feedback',
-    mock: {
-      id: 'mock1',
-      title: 'Full Mock 1',
-      listeningAudioBase: 'https://pangea8.com/test14/'
-    }
+    mocks: [
+      { n: 1, id: 'mock1', title: 'Full Mock 1' },
+      { n: 2, id: 'mock2', title: 'Full Mock 2' },
+      { n: 3, id: 'mock3', title: 'Full Mock 3' },
+      { n: 4, id: 'mock4', title: 'Full Mock 4' },
+      { n: 5, id: 'mock5', title: 'Full Mock 5' }
+    ]
   };
 
   var DEV = (location.hostname === 'localhost' || location.hostname === '127.0.0.1');
@@ -195,13 +197,23 @@
     a.stage = stage;
     setAttempt(a);
   }
-  function pageFor(stage) { return stage + '.html'; }
+  /* Mock 1 pages have no suffix (listening.html); mocks 2+ are suffixed
+     (listening2.html). The result page is shared by every mock. */
+  function pageFor(stage, n) {
+    n = Number(n) || 1;
+    if (stage === 'result') return 'result.html';
+    return stage + (n > 1 ? String(n) : '') + '.html';
+  }
   /* Each section page calls this: redirects home when there is no attempt,
-     or to the current stage page when the student reloads an older page. */
-  function requireStage(stage) {
+     or to the current stage/mock page when the student reloads an older page. */
+  function requireStage(stage, n) {
     var a = getAttempt();
     if (!a) { location.replace('index.html'); return null; }
-    if (a.stage !== stage) { location.replace(pageFor(a.stage)); return null; }
+    var an = Number(a.n) || 1;
+    if (a.stage !== stage || (n && an !== Number(n))) {
+      location.replace(pageFor(a.stage, an));
+      return null;
+    }
     return a;
   }
   function clearAttempt() {
@@ -226,7 +238,7 @@
     ready: ready, signInGoogle: signInGoogle, signOut: signOutUser,
     getWallet: getWallet, spendCoins: spendCoins, createCoinRequest: createCoinRequest,
     getAttempt: getAttempt, setAttempt: setAttempt, advanceStage: advanceStage,
-    requireStage: requireStage, clearAttempt: clearAttempt, getPart: getPart,
+    requireStage: requireStage, clearAttempt: clearAttempt, getPart: getPart, pageFor: pageFor,
     bandL: function (raw) { return bandFromRaw(raw, BAND_L); },
     bandR: function (raw) { return bandFromRaw(raw, BAND_R); },
     halfRound: halfRound, fmtBand: fmtBand,

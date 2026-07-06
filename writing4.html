@@ -115,36 +115,17 @@ textarea.essay{flex:1;resize:none;border:none;outline:none;background:transparen
 
 <script>
 'use strict';
-var MOCK_ATTEMPT = window.P8M ? P8M.requireStage('writing', 1) : null;
+var MOCK_ATTEMPT = window.P8M ? P8M.requireStage('writing', 4) : null;
 var WSTATE_KEY = 'p8m_writing_state';
 var DURATION = 60 * 60 * 1000;
 
 var TASKS = {
-  1: {
-    min: 150,
-    html: '<h2>Writing Task 1</h2>' +
-      '<p class="tasknote">You should spend about <b>20 minutes</b> on this task.</p>' +
-      '<div class="taskbox">The table below shows the number of cars per 1000 people in five European countries in three years and compares them with the European average.<br><br>Summarise the information by selecting and reporting the main features, and make comparisons where relevant.</div>' +
-      '<p class="minwords">Write at least <b>150 words</b>.</p>' +
-      '<table class="data"><caption>The number of cars per 1000 people</caption>' +
-      '<thead><tr><th>Country</th><th>2009</th><th>2010</th><th>2011</th></tr></thead><tbody>' +
-      '<tr><td>Country 1</td><td>400</td><td>450</td><td>350</td></tr>' +
-      '<tr><td>Country 2</td><td>550</td><td>600</td><td>570</td></tr>' +
-      '<tr><td>Country 3</td><td>600</td><td>650</td><td>620</td></tr>' +
-      '<tr><td>Country 4</td><td>700</td><td>700</td><td>700</td></tr>' +
-      '<tr><td>Country 5</td><td>870</td><td>920</td><td>990</td></tr>' +
-      '<tr><td>Average of 5</td><td>680</td><td>740</td><td>730</td></tr>' +
-      '</tbody></table>',
-    prompt: 'The table shows the number of cars per 1000 people in five European countries in 2009, 2010 and 2011, compared with the European average. Data — Country 1: 400/450/350; Country 2: 550/600/570; Country 3: 600/650/620; Country 4: 700/700/700; Country 5: 870/920/990; Average of 5: 680/740/730. Summarise the information by selecting and reporting the main features, and make comparisons where relevant.'
-  },
-  2: {
-    min: 250,
-    html: '<h2>Writing Task 2</h2>' +
-      '<p class="tasknote">You should spend about <b>40 minutes</b> on this task.</p>' +
-      '<div class="taskbox">Some people enjoy change in life, while other people try to avoid it.<br><br>What are the advantages and disadvantages of both approaches?</div>' +
-      '<p class="minwords">Write at least <b>250 words</b>. Give reasons for your answer and include any relevant examples from your own knowledge or experience.</p>',
-    prompt: 'Some people enjoy change in life, while other people try to avoid it. What are the advantages and disadvantages of both approaches?'
-  }
+  1: { min: 150,
+       html: "<h2>Writing Task 1</h2><p class=\"tasknote\">You should spend about <b>20 minutes</b> on this task.</p><div class=\"taskbox\">The chart and table below show the results of a survey of library users at a university.<br><br>Summarise the information by selecting and reporting the main features, and make comparisons where relevant.</div><p class=\"minwords\">Write at least <b>150 words</b>.</p><svg viewBox=\"0 0 640 320\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" style=\"max-width:100%;height:auto;background:#fff\"><text x=\"320.0\" y=\"24\" text-anchor=\"middle\" font-size=\"15\" font-weight=\"bold\" font-family=\"Arial,Helvetica,sans-serif\" fill=\"#111\">Categories of library users</text><path d=\"M170,175 L170.0,60.0 A115,115 0 0 1 212.3,281.9 Z\" fill=\"#2f5fa8\" stroke=\"#fff\" stroke-width=\"1.5\"/><text x=\"240.0\" y=\"161.6\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"bold\" font-family=\"Arial,Helvetica,sans-serif\" fill=\"#fff\">44%</text><path d=\"M170,175 L212.3,281.9 A115,115 0 0 1 63.1,217.3 Z\" fill=\"#a5a5a5\" stroke=\"#fff\" stroke-width=\"1.5\"/><text x=\"141.7\" y=\"240.4\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"bold\" font-family=\"Arial,Helvetica,sans-serif\" fill=\"#fff\">25%</text><path d=\"M170,175 L63.1,217.3 A115,115 0 0 1 77.0,107.4 Z\" fill=\"#f59e0b\" stroke=\"#fff\" stroke-width=\"1.5\"/><text x=\"99.3\" y=\"166.1\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"bold\" font-family=\"Arial,Helvetica,sans-serif\" fill=\"#fff\">16%</text><path d=\"M170,175 L77.0,107.4 A115,115 0 0 1 121.0,70.9 Z\" fill=\"#264478\" stroke=\"#fff\" stroke-width=\"1.5\"/><text x=\"124.6\" y=\"120.1\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"bold\" font-family=\"Arial,Helvetica,sans-serif\" fill=\"#fff\">8%</text><path d=\"M170,175 L121.0,70.9 A115,115 0 0 1 170.0,60.0 Z\" fill=\"#70ad47\" stroke=\"#fff\" stroke-width=\"1.5\"/><text x=\"154.4\" y=\"105.4\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"bold\" font-family=\"Arial,Helvetica,sans-serif\" fill=\"#fff\">7%</text><rect x=\"340\" y=\"70\" width=\"14\" height=\"14\" fill=\"#2f5fa8\"/><text x=\"362\" y=\"82\" font-size=\"13\" font-family=\"Arial,Helvetica,sans-serif\" fill=\"#333\">Full-time undergraduate \u2014 44%</text><rect x=\"340\" y=\"100\" width=\"14\" height=\"14\" fill=\"#a5a5a5\"/><text x=\"362\" y=\"112\" font-size=\"13\" font-family=\"Arial,Helvetica,sans-serif\" fill=\"#333\">Full-time postgraduate \u2014 25%</text><rect x=\"340\" y=\"130\" width=\"14\" height=\"14\" fill=\"#f59e0b\"/><text x=\"362\" y=\"142\" font-size=\"13\" font-family=\"Arial,Helvetica,sans-serif\" fill=\"#333\">Part-time postgraduate \u2014 16%</text><rect x=\"340\" y=\"160\" width=\"14\" height=\"14\" fill=\"#264478\"/><text x=\"362\" y=\"172\" font-size=\"13\" font-family=\"Arial,Helvetica,sans-serif\" fill=\"#333\">Distance learning (all courses) \u2014 8%</text><rect x=\"340\" y=\"190\" width=\"14\" height=\"14\" fill=\"#70ad47\"/><text x=\"362\" y=\"202\" font-size=\"13\" font-family=\"Arial,Helvetica,sans-serif\" fill=\"#333\">Academic staff \u2014 7%</text></svg><table class=\"data\"><caption>Library user satisfaction (%)</caption><thead><tr><th></th><th>Very satisfied</th><th>Fairly satisfied</th><th>Not satisfied</th></tr></thead><tbody><tr><td>Library opening hours</td><td>65</td><td>35</td><td>0</td></tr><tr><td>Helpfulness of staff</td><td>95</td><td>5</td><td>0</td></tr><tr><td>Availability of books</td><td>50</td><td>40</td><td>10</td></tr><tr><td>Availability of journals</td><td>45</td><td>35</td><td>20</td></tr><tr><td>Reliability of wi-fi</td><td>48</td><td>33</td><td>19</td></tr></tbody></table>",
+       prompt: "The pie chart and table show the results of a survey of library users at a university. Categories of users: full-time undergraduate 44%, full-time postgraduate 25%, part-time postgraduate 16%, distance learning 8%, academic staff 7%. Satisfaction (% very satisfied / fairly satisfied / not satisfied): library opening hours 65/35/0; helpfulness of staff 95/5/0; availability of books 50/40/10; availability of journals 45/35/20; reliability of wi-fi 48/33/19. Summarise the information by selecting and reporting the main features, and make comparisons where relevant." },
+  2: { min: 250,
+       html: "<h2>Writing Task 2</h2><p class=\"tasknote\">You should spend about <b>40 minutes</b> on this task.</p><div class=\"taskbox\">Some people say that children should spend their free time on clubs and extra classes. Others, however, believe they should spend their leisure time doing activities with their families.<br><br>Discuss both of these views and give your own opinion.</div><p class=\"minwords\">Write at least <b>250 words</b>. Give reasons for your answer and include any relevant examples from your own knowledge or experience.</p>",
+       prompt: "Some people say that children should spend their free time on clubs and extra classes. Others, however, believe they should spend their leisure time doing activities with their families. Discuss both of these views and give your own opinion." }
 };
 
 var S = { task: 1, texts: { 1: '', 2: '' }, deadline: null, timerInt: null, finished: false };

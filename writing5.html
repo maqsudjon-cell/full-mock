@@ -115,36 +115,17 @@ textarea.essay{flex:1;resize:none;border:none;outline:none;background:transparen
 
 <script>
 'use strict';
-var MOCK_ATTEMPT = window.P8M ? P8M.requireStage('writing', 1) : null;
+var MOCK_ATTEMPT = window.P8M ? P8M.requireStage('writing', 5) : null;
 var WSTATE_KEY = 'p8m_writing_state';
 var DURATION = 60 * 60 * 1000;
 
 var TASKS = {
-  1: {
-    min: 150,
-    html: '<h2>Writing Task 1</h2>' +
-      '<p class="tasknote">You should spend about <b>20 minutes</b> on this task.</p>' +
-      '<div class="taskbox">The table below shows the number of cars per 1000 people in five European countries in three years and compares them with the European average.<br><br>Summarise the information by selecting and reporting the main features, and make comparisons where relevant.</div>' +
-      '<p class="minwords">Write at least <b>150 words</b>.</p>' +
-      '<table class="data"><caption>The number of cars per 1000 people</caption>' +
-      '<thead><tr><th>Country</th><th>2009</th><th>2010</th><th>2011</th></tr></thead><tbody>' +
-      '<tr><td>Country 1</td><td>400</td><td>450</td><td>350</td></tr>' +
-      '<tr><td>Country 2</td><td>550</td><td>600</td><td>570</td></tr>' +
-      '<tr><td>Country 3</td><td>600</td><td>650</td><td>620</td></tr>' +
-      '<tr><td>Country 4</td><td>700</td><td>700</td><td>700</td></tr>' +
-      '<tr><td>Country 5</td><td>870</td><td>920</td><td>990</td></tr>' +
-      '<tr><td>Average of 5</td><td>680</td><td>740</td><td>730</td></tr>' +
-      '</tbody></table>',
-    prompt: 'The table shows the number of cars per 1000 people in five European countries in 2009, 2010 and 2011, compared with the European average. Data — Country 1: 400/450/350; Country 2: 550/600/570; Country 3: 600/650/620; Country 4: 700/700/700; Country 5: 870/920/990; Average of 5: 680/740/730. Summarise the information by selecting and reporting the main features, and make comparisons where relevant.'
-  },
-  2: {
-    min: 250,
-    html: '<h2>Writing Task 2</h2>' +
-      '<p class="tasknote">You should spend about <b>40 minutes</b> on this task.</p>' +
-      '<div class="taskbox">Some people enjoy change in life, while other people try to avoid it.<br><br>What are the advantages and disadvantages of both approaches?</div>' +
-      '<p class="minwords">Write at least <b>250 words</b>. Give reasons for your answer and include any relevant examples from your own knowledge or experience.</p>',
-    prompt: 'Some people enjoy change in life, while other people try to avoid it. What are the advantages and disadvantages of both approaches?'
-  }
+  1: { min: 150,
+       html: "<h2>Writing Task 1</h2><p class=\"tasknote\">You should spend about <b>20 minutes</b> on this task.</p><div class=\"taskbox\">The table below shows the percentage of households with internet access in five European countries in three years and compares them with the European average.<br><br>Summarise the information by selecting and reporting the main features, and make comparisons where relevant.</div><p class=\"minwords\">Write at least <b>150 words</b>.</p><table class=\"data\"><caption>Households with internet access (%)</caption><thead><tr><th>Country</th><th>2010</th><th>2015</th><th>2020</th></tr></thead><tbody><tr><td>Country 1</td><td>45</td><td>62</td><td>70</td></tr><tr><td>Country 2</td><td>60</td><td>75</td><td>85</td></tr><tr><td>Country 3</td><td>55</td><td>68</td><td>66</td></tr><tr><td>Country 4</td><td>70</td><td>70</td><td>72</td></tr><tr><td>Country 5</td><td>82</td><td>90</td><td>96</td></tr><tr><td>Average of 5</td><td>62</td><td>73</td><td>78</td></tr></tbody></table>",
+       prompt: "The table shows the percentage of households with internet access in five European countries in 2010, 2015 and 2020, compared with the average of the five. Data (2010/2015/2020): Country 1: 45/62/70; Country 2: 60/75/85; Country 3: 55/68/66; Country 4: 70/70/72; Country 5: 82/90/96; Average of 5: 62/73/78. Summarise the information by selecting and reporting the main features, and make comparisons where relevant." },
+  2: { min: 250,
+       html: "<h2>Writing Task 2</h2><p class=\"tasknote\">You should spend about <b>40 minutes</b> on this task.</p><div class=\"taskbox\">Children&#39;s leisure activities should always be educational because they may have too much to learn before they become adults.<br><br>Do you agree or disagree?</div><p class=\"minwords\">Write at least <b>250 words</b>. Give reasons for your answer and include any relevant examples from your own knowledge or experience.</p>",
+       prompt: "Children's leisure activities should always be educational because they may have too much to learn before they become adults. Do you agree or disagree?" }
 };
 
 var S = { task: 1, texts: { 1: '', 2: '' }, deadline: null, timerInt: null, finished: false };

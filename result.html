@@ -92,7 +92,7 @@ td.na{color:var(--muted);font-style:italic}
 
   <div class="sheet">
     <table class="report">
-      <tr class="brandrow"><td colspan="8"><div class="bd"><span class="bm">pangea<b>8</b> · FULL MOCK</span><span class="dt" id="rDate"></span></div></td></tr>
+      <tr class="brandrow"><td colspan="8"><div class="bd"><span class="bm">pangea<b>8</b> · FULL MOCK <span id="rMockN"></span></span><span class="dt" id="rDate"></span></div></td></tr>
       <tr>
         <th class="h-cand" rowspan="2">CANDIDATE</th>
         <th class="h-l" rowspan="2">LISTENING</th>
@@ -152,6 +152,7 @@ var bandL = L ? P8M.bandL(L.raw) : null;
 var bandR = R ? P8M.bandR(R.raw) : null;
 
 var candNo = '№ ' + ('000000' + (A.startedAt % 1000000)).slice(-6);
+$('rMockN').textContent = Number(A.n) || 1;
 $('cCand').innerHTML = P8M.esc(A.name || 'Candidate') + '<small>' + candNo + '</small>';
 $('rDate').textContent = new Date(A.startedAt).toLocaleString('en-GB', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
 
@@ -261,7 +262,7 @@ function persist(){
   if (sessionStorage.getItem('p8m_saved')) return;
   sessionStorage.setItem('p8m_saved', '1');
   var rec = {
-    uid: A.uid, name: A.name || '', mockId: A.mockId,
+    uid: A.uid, name: A.name || '', mockId: A.mockId, m: Number(A.n) || 1,
     l: bandL, lraw: L ? L.raw : null,
     r: bandR, rraw: R ? R.raw : null,
     w1: state.w1, w2: state.w2, w: state.w,
@@ -271,7 +272,7 @@ function persist(){
   };
   try {
     var h = JSON.parse(localStorage.getItem('p8m_history') || '[]');
-    h.push({ name: rec.name, l: rec.l, r: rec.r, w: rec.w, overall: rec.overall, ts: rec.ts });
+    h.push({ name: rec.name, m: rec.m, l: rec.l, r: rec.r, w: rec.w, overall: rec.overall, ts: rec.ts });
     localStorage.setItem('p8m_history', JSON.stringify(h.slice(-100)));
   } catch(e){}
   P8M.ready.then(function(fb){
