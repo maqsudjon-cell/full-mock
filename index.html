@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IELTS Full Mock Exam — pangea8</title>
-<meta name="description" content="Computer-delivered IELTS full mock: Listening, Reading and Writing in one sitting, with instant band scores and AI-marked writing. By pangea8.">
-<link rel="icon" href="https://pangea8.com/ielts-hub/favicon.svg">
+<title>IELTS Full Mock Exam — Flarestamina</title>
+<meta name="description" content="Computer-delivered IELTS full mock: Listening, Reading and Writing in one sitting, with instant band scores and AI-marked writing. By Flarestamina.">
+<link rel="icon" href="https://flarestamina.com/ielts-hub/favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="mock.js"></script>
 <style>
@@ -17,7 +17,7 @@
 }
 html[data-p8m-theme="dark"]{
   --bg:#0A0A0A; --surface:#111; --surface2:#171717; --text:#fafafa; --muted:#a1a1aa;
-  --border:#232323; --em:#10B981; --em-bright:#34D399; --em-soft:#064e3b;
+  --border:#232323; --em:#E8501A; --em-bright:#FF5A1F; --em-soft:#3b1405;
   --danger:#f0928a; --danger-soft:#3a1f1d; --gold:#fbbf24; --gold-soft:#3a2f10;
   --shadow:0 4px 20px rgba(0,0,0,.5);
 }
@@ -116,7 +116,7 @@ html[data-p8m-theme="light"] .req-ok{color:#065f46}
 </head>
 <body>
 <header class="site"><div class="wrap hrow">
-  <a class="wordmark" href="https://pangea8.com/">pangea<b>8</b><small>FULL MOCK</small></a>
+  <a class="wordmark" href="https://flarestamina.com/"><b>FLARE</b>STAMINA<small>FULL MOCK</small></a>
   <div class="hacts">
     <button class="pill" id="coinPill" title="Your coin balance" style="display:none"><span id="coinIco"></span><span id="coinCount">—</span></button>
     <button class="iconbtn" id="themeBtn" title="Theme">◐</button>
@@ -128,7 +128,7 @@ html[data-p8m-theme="light"] .req-ok{color:#065f46}
 <main class="wrap">
   <div class="hero">
     <h1>IELTS Full Mock — <em>one sitting, real exam feel</em></h1>
-    <p class="lead">Listening → Reading → Writing back-to-back with real timers, then an instant IELTS-style result sheet. Your writing is marked in minutes by the pangea8 AI examiner.</p>
+    <p class="lead">Listening → Reading → Writing back-to-back with real timers, then an instant IELTS-style result sheet. Your writing is marked in minutes by the Flarestamina AI examiner.</p>
     <div class="badges">
       <span class="badge"><b>~2h 35m</b> total</span>
       <span class="badge"><b>40+40</b> L/R questions</span>
@@ -177,7 +177,7 @@ html[data-p8m-theme="light"] .req-ok{color:#065f46}
 </main>
 
 <footer class="site"><div class="wrap">
-  <span>© <span id="yy"></span> pangea8 — <a href="https://pangea8.com/ielts-hub/">Free practice hub</a></span>
+  <span>© <span id="yy"></span> Flarestamina — <a href="https://flarestamina.com/ielts-hub/">Free practice hub</a></span>
   <span><a id="tgLink" href="#" target="_blank" rel="noopener">Telegram support</a> <a href="admin.html" id="adminLink" style="display:none;margin-left:14px">Admin</a></span>
 </div></footer>
 
@@ -272,7 +272,7 @@ function renderAuth(){
     $('uidCode').onclick = function(){ navigator.clipboard.writeText(u.uid).then(function(){ P8M.toast('ID copied'); }); };
     refreshWallet();
   } else {
-    $('startHint').innerHTML = 'Sign in first: Google popup, or <a href="https://pangea8.com/signin.html?next=/full-mock/">sign in with email</a>.';
+    $('startHint').innerHTML = 'Sign in first: Google popup, or <a href="https://flarestamina.com/signin.html?next=/full-mock/">sign in with email</a>.';
     $('coinBig').textContent = '—'; $('coinCount').textContent = '—';
     $('uidLine').style.display = 'none';
   }
@@ -294,7 +294,7 @@ $('signinBtn').addEventListener('click', doSignIn);
 function doSignIn(){
   P8M.signInGoogle().then(function(u){ fbCtx.user = u; renderAuth(); })
   .catch(function(err){
-    if (err && err.code === 'auth/popup-blocked') P8M.toast('Pop-up blocked — allow pop-ups for pangea8.com and try again.');
+    if (err && err.code === 'auth/popup-blocked') P8M.toast('Pop-up blocked — allow pop-ups for flarestamina.com and try again.');
     else if (err && err.code === 'auth/cancelled-popup-request') {}
     else P8M.toast('Sign-in failed. Try again.');
   });
