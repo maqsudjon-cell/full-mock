@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>pangea8 Full Mock — Listening (Part 1 of 3)</title>
+<title>Flarestamina Full Mock — Listening (Part 1 of 3)</title>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="mock.js"></script>
 <style>
@@ -249,7 +249,7 @@
   <div class="audio-sticky" id="audioSticky">
     <span class="audio-label"><strong>Section <span id="audio-num">1</span></strong> audio:</span>
     <audio id="player" controls onplay="pauseOtherAudios(this)" preload="metadata" style="width:100%">
-      <source id="audio-src" src="https://pangea8.com/test20/TEST_20_Section_1.mp3" type="audio/mpeg">
+      <source id="audio-src" src="https://flarestamina.com/test20/TEST_20_Section_1.mp3" type="audio/mpeg">
     </audio>
     <div class="speed-row">
       <span class="label">Speed:</span>
@@ -465,7 +465,7 @@
 const correctAnswers = {"1": ["transport", "public transport", "the transport"], "2": ["parking", "car parking", "the parking"], "3": ["120", "$120", "\u00a3120", "120 dollars", "120 pounds"], "4": ["shops", "the shops", "shop"], "5": ["schools", "the schools", "school"], "6": ["flat", "an apartment", "apartment", "a flat", "the flat"], "7": ["expensive", "too expensive", "pricey", "costly"], "8": ["Godfrey", "GODFREY", "godfrey"], "9": ["0742666395", "0742 666395", "0742 666 395", "0742-666-395", "074 2666 395"], "10": ["Saturday", "Sat", "saturday", "Saturdays"], "11": ["personality", "personalities", "the personality", "the personalities"], "12": ["logical", "logic", "logical thinking"], "13": ["movement", "movements", "body movement"], "14": ["feelings", "feeling", "the feelings"], "15": ["complex", "too complex", "complicated"], "16": ["lecture", "a lecture", "the lecture", "lectures"], "17": ["game", "a game", "the game", "games"], "18": ["posters", "poster", "a poster", "the poster"], "19": ["diagram", "a diagram", "the diagram", "diagrams"], "20": ["demonstration", "a demonstration", "the demonstration", "demo"], "21": "B", "22": "A", "23": "I", "24": "H", "25": "C", "26": "D", "27": "E", "28": "B", "29": "A", "30": "A", "31": ["sand", "the sand", "some sand"], "32": ["sink", "sinks", "go down", "drop", "fall"], "33": ["medications", "medication", "medicines", "drugs", "the medications"], "34": ["sticky tape", "tape", "the sticky tape", "scotch tape", "sellotape"], "35": ["released", "let out", "release", "let go", "released suddenly"], "36": ["elastic", "stretchy", "elastic", "how elastic"], "37": ["engine", "engines", "an engine", "the engine"], "38": ["speed", "the speed", "speeds"], "39": ["accelerate", "speed up", "go faster", "increase speed"], "40": ["ice skating", "ice-skating", "iceskating", "skating", "figure skating"]};
 const multiCorrect = {};
 
-const AUDIO_BASE = 'https://pangea8.com/test20/';
+const AUDIO_BASE = 'https://flarestamina.com/test20/';
 const audioTracks = {"1": AUDIO_BASE+"TEST_20_Section_1.mp3", "2": AUDIO_BASE+"TEST_20_Section_2.mp3", "3": AUDIO_BASE+"TEST_20_Section_3.mp3", "4": AUDIO_BASE+"TEST_20_Section_4.mp3"};
 function pauseOtherAudios(active) { document.querySelectorAll('audio').forEach(a => { if (a !== active && !a.paused) try { a.pause(); } catch(e){} }); }
 const player = document.getElementById('player');
@@ -786,7 +786,7 @@ function clearHighlightAt() { if (clickedHighlightEl && clickedHighlightEl.paren
 function eraseHighlights() { document.querySelectorAll('.highlighted').forEach(el => { const p = el.parentNode; while (el.firstChild) p.insertBefore(el.firstChild, el); p.removeChild(el); }); }
 function resetAllAnswers() { if (!confirm('Remove ALL your answers and start fresh?')) return; document.querySelectorAll('input[type="text"][data-q]').forEach(inp => { inp.value = ''; inp.classList.remove('correct','incorrect'); }); document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false); document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false); document.querySelectorAll('.mcq-option.selected').forEach(o => o.classList.remove('selected')); document.querySelectorAll('.check-option.selected').forEach(o => o.classList.remove('selected')); eraseHighlights(); document.getElementById('progressCount').textContent = '0'; document.body.classList.remove('test-submitted'); }
 
-/* ================= pangea8 Full Mock harness ================= */
+/* ================= Flarestamina Full Mock harness ================= */
 const MSTATE_KEY = 'p8m_listening_state';
 const MOCK_ATTEMPT = window.P8M ? P8M.requireStage('listening', 3) : null;
 
