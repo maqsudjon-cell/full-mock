@@ -1,5 +1,5 @@
 /*!
- * pangea8 Full Mock — shared runtime
+ * Flarestamina Full Mock — shared runtime
  * Config (pricing, card, admin), Firebase (Google popup only),
  * coin wallet helpers, attempt guards, band tables.
  *
