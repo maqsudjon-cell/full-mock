@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>pangea8 Full Mock — Listening (Part 1 of 3)</title>
+<title>Flarestamina Full Mock — Listening (Part 1 of 3)</title>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="mock.js"></script>
 <style>
@@ -249,7 +249,7 @@
   <div class="audio-sticky" id="audioSticky">
     <span class="audio-label"><strong>Section <span id="audio-num">1</span></strong> audio:</span>
     <audio id="player" controls onplay="pauseOtherAudios(this)" preload="metadata" style="width:100%">
-      <source id="audio-src" src="https://pangea8.com/test19/TEST_19_Section_1.mp3" type="audio/mpeg">
+      <source id="audio-src" src="https://flarestamina.com/test19/TEST_19_Section_1.mp3" type="audio/mpeg">
     </audio>
     <div class="speed-row">
       <span class="label">Speed:</span>
@@ -458,7 +458,7 @@
 const correctAnswers = {"1": ["Alex", "Alexandra", "ALEX", "ALEXANDRA"], "2": ["3", "three", "3 years", "three years"], "3": ["8 November", "November 8", "8th November", "November 8th", "8/11", "11/8", "8 Nov"], "4": ["5", "five", "5 years", "five years"], "5": ["108 Park Road", "108 park road", "108 ParkRoad", "108-Park-Road"], "6": ["grandmother", "grandma", "the grandmother", "her grandmother"], "7": ["sleeping", "falling asleep", "sleep", "falling sleep", "go to sleep"], "8": ["dress", "get dressed", "dress herself", "getting dressed"], "9": ["Monday and Tuesday", "Monday Tuesday", "Mondays and Tuesdays", "Tuesday and Monday", "Tue and Mon", "Mon and Tue", "Monday,Tuesday"], "10": ["4:00", "4pm", "4 pm", "4 o'clock", "four o'clock", "four", "16:00", "4:00pm", "4pm", "4 PM"], "11": ["hobby", "a hobby", "hobbies"], "12": ["car", "the car", "a car"], "13": ["kitchen", "the kitchen", "a kitchen"], "14": ["presents", "gifts", "present", "gift", "the presents"], "15": ["elderly", "the elderly", "elderly people", "old people"], "16": ["projects", "project", "the projects", "long-term projects"], "17": ["Internet", "internet", "the Internet", "web", "the web"], "18": ["library", "the library", "public library", "libraries"], "19": ["active", "busy", "active/busy", "very active", "very busy"], "20": ["12", "twelve", "twelve years", "12 years"], "21": "B", "22": "C", "23": "B", "24": "A", "25": "A", "26": "A", "27": "C", "28": "C", "29": "B", "30": "C", "31": ["5000 BC", "5,000 BC", "5000BC", "five thousand BC"], "32": ["worms", "worm", "the worms", "tooth worms"], "33": ["historical evidence", "evidence", "historic evidence", "the historical evidence"], "34": ["ancient Egypt", "Ancient Egypt", "Egypt", "ANCIENT EGYPT"], "35": ["olive oil", "onions", "Olive oil", "Onions"], "36": ["olive oil", "onions", "Olive oil", "Onions"], "37": ["historian", "a historian", "the historian", "historians"], "38": ["extract", "to extract", "extracted", "remove", "take out"], "39": ["Middle Ages", "middle ages", "Middle Age", "the Middle Ages", "Medieval period"], "40": ["modern", "Modern", "Modern Dentistry", "modern dentistry"]};
 const multiCorrect = {"35": {"inputs": ["35", "36"], "groups": [["olive oil", "oil"], ["onions", "onion"]]}};
 
-const AUDIO_BASE = 'https://pangea8.com/test19/';
+const AUDIO_BASE = 'https://flarestamina.com/test19/';
 const audioTracks = {"1": AUDIO_BASE+"TEST_19_Section_1.mp3", "2": AUDIO_BASE+"TEST_19_Section_2.mp3", "3": AUDIO_BASE+"TEST_19_Section_3.mp3", "4": AUDIO_BASE+"TEST_19_Section_4.mp3"};
 function pauseOtherAudios(active) { document.querySelectorAll('audio').forEach(a => { if (a !== active && !a.paused) try { a.pause(); } catch(e){} }); }
 const player = document.getElementById('player');
@@ -779,7 +779,7 @@ function clearHighlightAt() { if (clickedHighlightEl && clickedHighlightEl.paren
 function eraseHighlights() { document.querySelectorAll('.highlighted').forEach(el => { const p = el.parentNode; while (el.firstChild) p.insertBefore(el.firstChild, el); p.removeChild(el); }); }
 function resetAllAnswers() { if (!confirm('Remove ALL your answers and start fresh?')) return; document.querySelectorAll('input[type="text"][data-q]').forEach(inp => { inp.value = ''; inp.classList.remove('correct','incorrect'); }); document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false); document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false); document.querySelectorAll('.mcq-option.selected').forEach(o => o.classList.remove('selected')); document.querySelectorAll('.check-option.selected').forEach(o => o.classList.remove('selected')); eraseHighlights(); document.getElementById('progressCount').textContent = '0'; document.body.classList.remove('test-submitted'); }
 
-/* ================= pangea8 Full Mock harness ================= */
+/* ================= Flarestamina Full Mock harness ================= */
 const MSTATE_KEY = 'p8m_listening_state';
 const MOCK_ATTEMPT = window.P8M ? P8M.requireStage('listening', 2) : null;
 
