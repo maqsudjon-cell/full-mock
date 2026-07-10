@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>pangea8 Full Mock — Reading (Part 2 of 3)</title>
+<title>Flarestamina Full Mock — Reading (Part 2 of 3)</title>
 <script src="mock.js"></script>
 <style>
 :root{--navy:#047857;--navy-dark:#035a44;--accent:#047857;--accent-hover:#035a44;--accent-soft:#d1fae5;--bg:#fff;--surface:#fff;--surface-alt:#fafaf9;--text:#0a0a0a;--muted:#6b7280;--border:#e5e7eb;--border-light:#f1f3f5;--qnum-border:#047857;--ok:#047857;--ok-soft:#d1fae5;--bad:#b42318;--bad-soft:#fdecea;--warn:#f59e0b;--hl:#FFE066;--hlb:#c8a800;--font-scale:1;--line-scale:1;--topbar-h:58px;--footer-h:60px}
@@ -165,14 +165,14 @@ mark.uhl{background:var(--hl);padding:0;border-radius:1px;cursor:pointer;color:i
 </head>
 <body>
 <div id="screen-landing" class="screen active"><div class="center"><div class="card">
-  <div class="brand-row"><span class="tg-dot">&#9654;</span> pangea8.com</div>
+  <div class="brand-row"><span class="tg-dot">&#9654;</span> flarestamina.com</div>
   <h1 class="landing-title">Reading — Part 2 of 3</h1>
   <p class="landing-desc">Academic Reading: three passages, forty questions, 60 minutes. Writing begins automatically when you submit this part.</p>
   <button class="btn primary" onclick="goInstr()">Start Reading</button>
   <div class="info-grid"><div class="info-box"><strong>60</strong> minutes</div><div class="info-box"><strong>40</strong> questions</div><div class="info-box"><strong>3</strong> passages</div></div>
 </div></div></div>
 <div id="screen-instructions" class="screen"><div class="center"><div class="card">
-  <div class="brand-row"><span class="tg-dot">&#9654;</span> pangea8.com</div>
+  <div class="brand-row"><span class="tg-dot">&#9654;</span> flarestamina.com</div>
   <h1 class="landing-title">Reading Test Instructions</h1>
   <p class="landing-desc">Read carefully before you begin. The 60-minute timer starts when you click <strong>Begin Test</strong>.</p>
   <ul class="rules">
@@ -643,7 +643,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')$('settings').classL
 })();
 function restart(){location.reload()}
 
-/* ================= pangea8 Full Mock harness ================= */
+/* ================= Flarestamina Full Mock harness ================= */
 const MOCK_ATTEMPT = window.P8M ? P8M.requireStage('reading', 5) : null;
 const RSTATE_KEY = 'p8m_reading_state';
 function mockSave(){
