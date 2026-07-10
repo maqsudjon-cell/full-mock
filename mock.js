@@ -10,6 +10,20 @@
   'use strict';
   if (window.P8M) return;
 
+  /* ===== FS Account (unified flarestamina.com auth) =====
+     The Google popup below stays — it keys the coin wallet. The FS gate
+     makes sure every student also has the one ecosystem account. */
+  function fsUser() { try { return window.FSAuth ? FSAuth.getUser() : null; } catch (e) { return null; } }
+  (function ensureFS() {
+    function gate() { try { if (window.FSAuth && !FSAuth.getUser()) FSAuth.require(); } catch (e) {} }
+    if (window.FSAuth) { gate(); return; }
+    var s = document.createElement('script');
+    s.src = 'https://flarestamina.com/assets/fs-auth.js';
+    s.onload = gate;
+    s.onerror = function () { console.warn('[P8M] fs-auth.js failed to load — FS gate skipped'); };
+    (document.head || document.documentElement).appendChild(s);
+  })();
+
   /* ================= CONFIG — edit prices/card here ================= */
   var CONFIG = {
     adminEmail: 'polatovmaqsudjon1@gmail.com',
@@ -178,6 +192,7 @@
       uid: fb.user.uid,
       email: fb.user.email || '',
       name: name || fb.user.displayName || '',
+      fsPhone: (fsUser() || {}).phone || '',
       coins: pkg.coins,
       uzs: pkg.uzs,
       status: 'pending',
@@ -234,6 +249,7 @@
     '<text x="12" y="16.4" text-anchor="middle" font-family="Space Grotesk,Inter,sans-serif" font-size="12" font-weight="800" fill="#fff">P</text></svg>';
 
   window.P8M = {
+    fsUser: fsUser,
     CONFIG: CONFIG, DEV: DEV,
     ready: ready, signInGoogle: signInGoogle, signOut: signOutUser,
     getWallet: getWallet, spendCoins: spendCoins, createCoinRequest: createCoinRequest,
