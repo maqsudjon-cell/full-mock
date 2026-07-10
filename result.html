@@ -266,7 +266,7 @@ function persist(){
   if (sessionStorage.getItem('p8m_saved')) return;
   sessionStorage.setItem('p8m_saved', '1');
   var rec = {
-    uid: A.uid, name: A.name || '', mockId: A.mockId, m: Number(A.n) || 1,
+    uid: A.uid, fsPhone: (window.FSAuth && FSAuth.getUser() ? (FSAuth.getUser().phone || '') : ''), name: A.name || '', mockId: A.mockId, m: Number(A.n) || 1,
     l: bandL, lraw: L ? L.raw : null,
     r: bandR, rraw: R ? R.raw : null,
     w1: state.w1, w2: state.w2, w: state.w,
