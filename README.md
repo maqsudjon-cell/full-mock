@@ -1,8 +1,8 @@
-# pangea8 Full Mock
+# Flarestamina Full Mock
 
 Paid computer-delivered IELTS full mock (Listening → Reading → Writing in one sitting)
 with a coin wallet, manual card-transfer top-ups, AI-marked writing and an
-IELTS-style result sheet. Lives at **https://pangea8.com/full-mock/**.
+IELTS-style result sheet. Lives at **https://flarestamina.com/full-mock/**.
 
 ## Pages
 
@@ -39,7 +39,7 @@ Until this is done the site shows a "coin system is being configured" notice.
 
 ## How the money flows
 
-1. Student signs in (Google popup or pangea8.com/signin.html) → presses **Buy coins**.
+1. Student signs in (Google popup or flarestamina.com/signin.html) → presses **Buy coins**.
 2. Transfers to the card in `mock.js` (`CONFIG.card`) and sends the receipt to Telegram (`CONFIG.telegramContact`).
 3. Presses “I’ve paid” → a `coin_requests` doc is created (status `pending`).
 4. You open `admin.html`, check the receipt, press **Approve** → coins land in their wallet.
