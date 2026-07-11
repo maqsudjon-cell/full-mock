@@ -13,6 +13,7 @@
   /* ===== FS Account (unified flarestamina.com auth) =====
      The Google popup below stays — it keys the coin wallet. The FS gate
      makes sure every student also has the one ecosystem account. */
+  (function(){if(document.querySelector('script[data-goatcounter]'))return;var g=document.createElement('script');g.async=true;g.src='//gc.zgo.at/count.js';g.setAttribute('data-goatcounter','https://flarestamina.goatcounter.com/count');(document.head||document.documentElement).appendChild(g);})();
   function fsUser() { try { return window.FSAuth ? FSAuth.getUser() : null; } catch (e) { return null; } }
   (function ensureFS() {
     function gate() { try { if (window.FSAuth && !FSAuth.getUser()) FSAuth.require(); } catch (e) {} }
