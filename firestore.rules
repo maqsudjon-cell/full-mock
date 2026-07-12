@@ -9,11 +9,16 @@ service cloud.firestore {
 
     /* ===== existing hub collections (unchanged behaviour) ===== */
     match /students/{uid} {
-      allow read: if true;
+      // own record or admin only (was public — closed 2026-07-11)
+      allow read: if isAdmin() || (request.auth != null && request.auth.uid == uid);
       allow write: if request.auth != null && request.auth.uid == uid;
     }
     match /results/{id} {
-      allow read: if true;
+      // a student reads only their OWN results: the FS Account token's email
+      // alias is <digits>@fs.flarestamina.com and results carry phone "+<digits>".
+      // Admin (Google login) sees everything. (was public — closed 2026-07-11)
+      allow read: if isAdmin() || (request.auth != null
+        && resource.data.phone == "+" + request.auth.token.email.split("@")[0]);
       allow create: if request.auth != null
         && request.resource.data.uid == request.auth.uid
         && request.resource.data.score is number
